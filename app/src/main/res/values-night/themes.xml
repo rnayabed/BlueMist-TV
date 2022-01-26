@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Pickaflix" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Pickaflix" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/Primary</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
@@ -10,7 +10,17 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/BackgroundDark</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Widget.Picka.BottomNavigationView" parent="ThemeOverlay.Material3.BottomAppBar">
+        <item name="itemActiveIndicatorStyle">@null</item>
+        <item name="itemRippleColor">?attr/colorPrimary</item>
+        <item name="labelVisibilityMode">unlabeled</item>
+    </style>
+
+    <style name="Widget.Picka.HomeScreenContainer" parent="ThemeOverlay.Material3">
+        <item name="android:background">@color/BackgroundDark</item>
     </style>
 </resources>

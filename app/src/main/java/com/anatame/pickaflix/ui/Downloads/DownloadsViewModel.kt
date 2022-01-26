@@ -1,10 +1,10 @@
-package com.anatame.pickaflix.ui.notifications
+package com.anatame.pickaflix.ui.Downloads
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class NotificationsViewModel : ViewModel() {
+class DownloadsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is notifications Fragment"

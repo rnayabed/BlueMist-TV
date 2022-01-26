@@ -12,14 +12,18 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.anatame.pickaflix.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_saved"
+        android:name="com.anatame.pickaflix.ui.Saved.SavedFragment"
+        android:label="@string/title_saved"
+        tools:layout="@layout/fragment_saved" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.anatame.pickaflix.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_downloads"
+        android:name="com.anatame.pickaflix.ui.Downloads.DownloadsFragment"
+        android:label="@string/title_downloads"
+        tools:layout="@layout/fragment_downloads" />
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.anatame.pickaflix.ui.Settings.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

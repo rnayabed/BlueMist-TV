@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
-import com.anatame.pickaflix.ui.adapter.HomeScreenAdapter
+import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.utils.Resource
 
 class HomeFragment : Fragment() {
@@ -36,7 +33,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        setUpRecylcerView()
+        setUpRecyclerView()
 
         homeViewModel.trendingMovies.observe(viewLifecycleOwner, Observer {
             when(it){
@@ -50,6 +47,7 @@ class HomeFragment : Fragment() {
 
                 is Resource.Error -> {
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+//                    homeViewModel.getHomeScreenData()
                 }
             }
         })
@@ -62,9 +60,9 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    fun setUpRecylcerView(){
+    fun setUpRecyclerView(){
         binding.RVHomeScreen.apply {
-            adapter = HomeScreenAdapter()
+            adapter = HomeScreenAdapter(context)
             layoutManager = LinearLayoutManager(context)
         }
     }
