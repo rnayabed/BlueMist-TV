@@ -1,15 +1,20 @@
 package com.anatame.pickaflix.ui.home.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
+import com.anatame.pickaflix.ui.home.HomeFragment
+import com.anatame.pickaflix.ui.home.HomeFragmentDirections
 import com.anatame.pickaflix.utils.constants.Constants.COMING_SOON
 import com.anatame.pickaflix.utils.constants.Constants.LATEST_MOVIES
 import com.anatame.pickaflix.utils.constants.Constants.NEW_TVSHOWS
@@ -18,7 +23,8 @@ import com.anatame.pickaflix.utils.constants.Constants.TRENDING_MOVIES
 import com.anatame.pickaflix.utils.constants.Constants.VIEW_PAGER
 
 class HomeScreenAdapter(
-    val context: Context
+    val context: Context,
+    val homeFragment: HomeFragment
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewPagerViewHolder(
@@ -79,6 +85,16 @@ class HomeScreenAdapter(
             )
         )
         adapter.differ.submitList(heroList)
+
+        adapter.setOnItemClickListener{pos, hero, cardView ->
+            val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(cardView.transitionName)
+            val extras = FragmentNavigatorExtras(cardView to cardView.transitionName)
+            homeFragment.navigateToDetailFromHero()
+            holder.itemView.findNavController().navigate(
+                directions,
+                extras
+            )
+        }
     }
 
     private fun setUpCategoryHolder(holder: CategoryViewHolder, viewType: Int) {

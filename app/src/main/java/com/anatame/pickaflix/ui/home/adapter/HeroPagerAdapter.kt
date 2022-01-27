@@ -7,6 +7,8 @@ import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
 import android.content.Context
 import android.util.Log
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerItemBinding
@@ -40,7 +42,7 @@ class HeroPagerAdapter(
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((Int, HeroItem, ImageView) -> Unit)? = null
+    private var onItemClickListener: ((Int, HeroItem, CardView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: HeroPagerViewHolder, position: Int) {
         Log.d("viewPager", "holder")
@@ -50,15 +52,19 @@ class HeroPagerAdapter(
         holder.itemView.apply {
             holder.binding.apply {
                  tvId.text = heroItem.title
+                    ViewCompat.setTransitionName(
+                    heroCardContainer,
+                    "iv$position ${heroItem.source}"
+                )
             }
             setOnClickListener {view ->
-              //  onItemClickListener?.let { it(position, heroItem, holder.binding.ivHero) }
+                onItemClickListener?.let { it(position, heroItem, holder.binding.heroCardContainer) }
             }
         }
 
     }
 
-    fun setOnItemClickListener(listener: (Int, HeroItem, ImageView) -> Unit) {
+    fun setOnItemClickListener(listener: (Int, HeroItem, CardView) -> Unit) {
         onItemClickListener = listener
     }
 
