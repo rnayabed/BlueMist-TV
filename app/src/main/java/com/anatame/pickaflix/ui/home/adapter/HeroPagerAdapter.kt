@@ -47,7 +47,6 @@ class HeroPagerAdapter(
     override fun onBindViewHolder(holder: HeroPagerViewHolder, position: Int) {
         Log.d("viewPager", "holder")
         val heroItem = differ.currentList[position]
-    //    ViewCompat.setTransitionName(holder.binding.ivMovieThumnail, "iv$position")
 
         holder.itemView.apply {
             holder.binding.apply {
@@ -68,9 +67,5 @@ class HeroPagerAdapter(
         onItemClickListener = listener
     }
 
-
-//    fun setOnItemClickListener(listener: (MovieItem, ImageView) -> Unit) {
-//        onItemClickListener = listener
-//    }
 
 }

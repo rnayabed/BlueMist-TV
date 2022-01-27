@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -47,23 +48,26 @@ class MovieAdapter(
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((Int, MovieItem, ImageView) -> Unit)? = null
+    private var onItemClickListener: ((Int, MovieItem, CardView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
-
+        val movieItem = differ.currentList[position]
         holder.itemView.apply {
 
             holder.binding.apply {
-
+                ViewCompat.setTransitionName(
+                    cvCardContainer,
+                    "iv$position ${movieItem.Url}"
+                )
             }
 
             setOnClickListener { view ->
-                //   onItemClickListener?.let { it(position, MovieItem, holder.binding.ivMovieThumbnail) }
+                   onItemClickListener?.let { it(position, movieItem, holder.binding.cvCardContainer) }
             }
         }
     }
 
-    fun setOnItemClickListener(listener: (Int, MovieItem, ImageView) -> Unit) {
+    fun setOnItemClickListener(listener: (Int, MovieItem, CardView) -> Unit) {
         onItemClickListener = listener
     }
 

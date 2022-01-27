@@ -1,20 +1,14 @@
 package com.anatame.pickaflix.ui.home.adapter
 
-import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
 import com.anatame.pickaflix.ui.home.HomeFragment
-import com.anatame.pickaflix.ui.home.HomeFragmentDirections
+import com.anatame.pickaflix.ui.home.category.CategoryItem
 import com.anatame.pickaflix.utils.constants.Constants.COMING_SOON
 import com.anatame.pickaflix.utils.constants.Constants.LATEST_MOVIES
 import com.anatame.pickaflix.utils.constants.Constants.NEW_TVSHOWS
@@ -87,104 +81,24 @@ class HomeScreenAdapter(
         adapter.differ.submitList(heroList)
 
         adapter.setOnItemClickListener{pos, hero, cardView ->
-            val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(cardView.transitionName)
-            val extras = FragmentNavigatorExtras(cardView to cardView.transitionName)
-            homeFragment.navigateToDetailFromHero()
-            holder.itemView.findNavController().navigate(
-                directions,
-                extras
-            )
+            homeFragment.navigateToDetailFromHero(cardView, holder)
         }
     }
+
+
 
     private fun setUpCategoryHolder(holder: CategoryViewHolder, viewType: Int) {
         val mBinding = holder.categoryItemBinding
+        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder)
         when(viewType){
-            TRENDING_MOVIES -> setUpTrendingMovies(mBinding)
-            POPULAR_SHOWS -> setUpPopularShows(mBinding)
-            LATEST_MOVIES -> setUpLatestMovies(mBinding)
-            NEW_TVSHOWS -> setUpNewTVShows(mBinding)
-            COMING_SOON -> setUpComingSoon(mBinding)
+            TRENDING_MOVIES -> categoryItem.setUpTrendingMovies()
+            POPULAR_SHOWS -> categoryItem.setUpPopularShows()
+            LATEST_MOVIES -> categoryItem.setUpLatestMovies()
+            NEW_TVSHOWS -> categoryItem.setUpNewTVShows()
+            COMING_SOON -> categoryItem.setUpComingSoon()
         }
     }
-
-    private fun setUpTrendingMovies(mBinding: ItemHomeCategoryBinding){
-        mBinding.apply {
-            val adapter = MovieAdapter(context)
-            tvCategoryTitle.text = "Trending Movies"
-            rvCategoryItems.adapter = adapter
-            rvCategoryItems.layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            rvCategoryItems.setHasFixedSize(true);
-            rvCategoryItems.isNestedScrollingEnabled = false;
-            val movieList = listOf(
-                MovieItem(
-                    title= "String",
-                    thumbnailUrl= "String",
-                    Url= "fhfh",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                ),
-                MovieItem(
-                    title= "String",
-                    thumbnailUrl= "String",
-                    Url= "fhfhhfs",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                ),
-                MovieItem(
-                    title= "fhfhfh",
-                    thumbnailUrl= "String",
-                    Url= "fsf",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                ),
-                MovieItem(
-                    title= "String",
-                    thumbnailUrl= "Stdggring",
-                    Url= "sfStssrifnfg",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                )
-            )
-            adapter.differ.submitList(movieList)
-        }
-    }
-
-    private fun setUpPopularShows(mBinding: ItemHomeCategoryBinding){
-        mBinding.apply {
-            tvCategoryTitle.text = "Popular Shows"
-        }
-    }
-
-    private fun setUpLatestMovies(mBinding: ItemHomeCategoryBinding){
-        mBinding.apply {
-            tvCategoryTitle.text = "Latest Movies"
-        }
-    }
-
-    private fun setUpNewTVShows(mBinding: ItemHomeCategoryBinding){
-        mBinding.apply {
-            tvCategoryTitle.text = "New TV Shows"
-        }
-    }
-
-    private fun setUpComingSoon(mBinding: ItemHomeCategoryBinding){
-        mBinding.apply {
-            tvCategoryTitle.text = "Coming Soon!"
-        }
-    }
+    
 
     override fun getItemViewType(position: Int): Int {
         return when(position){

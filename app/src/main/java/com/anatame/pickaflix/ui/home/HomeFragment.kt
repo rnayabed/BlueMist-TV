@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
@@ -69,7 +72,37 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    fun navigateToDetailFromHero(){
+    fun navigateToDetailFromHero(
+        cardView: CardView,
+        holder: HomeScreenAdapter.ViewPagerViewHolder
+    ) {
+        homeTransition()
+
+        val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(cardView.transitionName)
+        val extras = FragmentNavigatorExtras(cardView to cardView.transitionName)
+
+        holder.itemView.findNavController().navigate(
+            directions,
+            extras
+        )
+    }
+
+    fun navigateToDetailFromCategory(
+        cardView: CardView,
+        holder: HomeScreenAdapter.CategoryViewHolder
+    ) {
+        homeTransition()
+
+        val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(cardView.transitionName)
+        val extras = FragmentNavigatorExtras(cardView to cardView.transitionName)
+
+        holder.itemView.findNavController().navigate(
+            directions,
+            extras
+        )
+    }
+
+    fun homeTransition(){
         exitTransition = MaterialElevationScale(false).apply {
             duration = 300
         }
