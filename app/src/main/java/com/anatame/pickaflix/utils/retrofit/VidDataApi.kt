@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.data.remote.retrofit
+package com.anatame.pickaflix.utils.data.remote.retrofit
 
 import com.anatame.pickaflix.utils.retrofit.VidData
 import retrofit2.Response

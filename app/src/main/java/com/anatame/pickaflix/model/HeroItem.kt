@@ -1,7 +1,6 @@
-package com.anatame.pickaflix.data.remote.PageParser.Home.DTO
+package com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO
 
 import java.io.Serializable
-import java.time.Duration
 
 data class HeroItem(
     val backgroundImageUrl: String,

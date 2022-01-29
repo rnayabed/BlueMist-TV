@@ -1,13 +1,10 @@
-package com.anatame.pickaflix.ui.Settings
+package com.anatame.pickaflix.ui.settings
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.anatame.pickaflix.R
-import com.anatame.pickaflix.databinding.FragmentDownloadsBinding
-import com.anatame.pickaflix.databinding.FragmentSavedBinding
 import com.anatame.pickaflix.databinding.FragmentSettingsBinding
 
 

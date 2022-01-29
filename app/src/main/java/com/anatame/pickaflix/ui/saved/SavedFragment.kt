@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.ui.Downloads
+package com.anatame.pickaflix.ui.saved
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,12 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.anatame.pickaflix.databinding.FragmentDownloadsBinding
+import com.anatame.pickaflix.databinding.FragmentSavedBinding
 
-class DownloadsFragment : Fragment() {
+class SavedFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: DownloadsViewModel
-    private var _binding: FragmentDownloadsBinding? = null
+    private lateinit var dashboardViewModel: SavedViewModel
+    private var _binding: FragmentSavedBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,14 +24,14 @@ class DownloadsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
-            ViewModelProvider(this).get(DownloadsViewModel::class.java)
+        dashboardViewModel =
+            ViewModelProvider(this).get(SavedViewModel::class.java)
 
-        _binding = FragmentDownloadsBinding.inflate(inflater, container, false)
+        _binding = FragmentSavedBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
+        val textView: TextView = binding.textDashboard
+        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

@@ -1,8 +1,8 @@
 package com.anatame.pickaflix.utils.parser
 
 import android.util.Log
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.*
-import com.anatame.pickaflix.data.remote.retrofit.RetrofitInstance
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.*
+import com.anatame.pickaflix.utils.data.remote.retrofit.RetrofitInstance
 import com.anatame.pickaflix.utils.constants.Constants.MOVIE_LIST_SELECTOR
 import com.anatame.pickaflix.utils.constants.Constants.MOVIE_URL
 import com.anatame.pickaflix.utils.retrofit.VidData

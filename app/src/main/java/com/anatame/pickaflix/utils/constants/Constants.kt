@@ -6,6 +6,7 @@ object Constants {
     const val HOST = "fmovies.ps"
 
     const val VIEW_PAGER = 0
+    const val WATCHLIST = 1
     const val TRENDING_MOVIES = 1
     const val POPULAR_SHOWS = 2
     const val LATEST_MOVIES = 3

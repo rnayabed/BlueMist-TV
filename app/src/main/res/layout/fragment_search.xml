@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.detail.DetailFragment">
+    tools:context=".ui.search.SearchFragment">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_detailContainer"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:text="Hello" />
 
-    </com.google.android.material.card.MaterialCardView>
 </FrameLayout>

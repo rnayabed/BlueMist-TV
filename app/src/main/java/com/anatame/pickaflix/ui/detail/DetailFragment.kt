@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.ui.Detail
+package com.anatame.pickaflix.ui.detail
 
 import android.graphics.Color
 import android.os.Bundle
@@ -11,7 +11,6 @@ import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentDetailBinding
-import com.anatame.pickaflix.databinding.FragmentDownloadsBinding
 import com.google.android.material.transition.MaterialContainerTransform
 
 

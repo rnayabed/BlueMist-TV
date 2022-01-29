@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
 import com.anatame.pickaflix.ui.home.HomeFragment
@@ -35,13 +35,8 @@ class HomeScreenAdapter(
         val categoryItemBinding = ItemHomeCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return when(viewType){
-            0 -> {
-                ViewPagerViewHolder(viewPagerItemBinding)
-            }
-
-            else -> {
-                CategoryViewHolder(categoryItemBinding)
-            }
+            0 -> ViewPagerViewHolder(viewPagerItemBinding)
+            else -> CategoryViewHolder(categoryItemBinding)
         }
     }
 
@@ -85,8 +80,6 @@ class HomeScreenAdapter(
         }
     }
 
-
-
     private fun setUpCategoryHolder(holder: CategoryViewHolder, viewType: Int) {
         val mBinding = holder.categoryItemBinding
         val categoryItem = CategoryItem(mBinding, context, homeFragment, holder)
@@ -98,7 +91,6 @@ class HomeScreenAdapter(
             COMING_SOON -> categoryItem.setUpComingSoon()
         }
     }
-    
 
     override fun getItemViewType(position: Int): Int {
         return when(position){

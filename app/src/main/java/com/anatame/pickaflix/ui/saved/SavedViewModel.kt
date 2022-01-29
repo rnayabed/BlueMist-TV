@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.ui.Saved
+package com.anatame.pickaflix.ui.saved
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anatame.pickaflix.Logger
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.parser.Parser
 import kotlinx.coroutines.Dispatchers

@@ -3,10 +3,9 @@ package com.anatame.pickaflix.ui.home.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.HeroItem
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import android.content.Context
 import android.util.Log
-import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer

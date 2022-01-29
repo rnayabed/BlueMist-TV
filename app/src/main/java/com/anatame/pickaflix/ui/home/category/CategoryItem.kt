@@ -3,8 +3,7 @@ package com.anatame.pickaflix.ui.home.category
 import android.content.Context
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
@@ -96,6 +95,7 @@ class CategoryItem(
             tvCategoryTitle.text = "Coming Soon!"
         }
     }
+
 
     override fun onClick(pos: Int, data: MovieItem, cardView: CardView) {
         homeFragment.navigateToDetailFromCategory(cardView, holder)

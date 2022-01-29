@@ -1,18 +1,14 @@
 package com.anatame.pickaflix.ui.home.adapter
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.R
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryRvItemBinding
 
 class MovieAdapter(

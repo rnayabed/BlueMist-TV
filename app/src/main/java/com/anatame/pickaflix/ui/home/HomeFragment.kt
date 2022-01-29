@@ -2,9 +2,11 @@ package com.anatame.pickaflix.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -12,12 +14,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.utils.Resource
 import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialSharedAxis
 
 class HomeFragment : Fragment() {
 
@@ -35,11 +40,20 @@ class HomeFragment : Fragment() {
     ): View? {
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        setHasOptionsMenu(true)
         setUpRecyclerView()
+
+        binding.topAppBar.setOnMenuItemClickListener { item ->
+            when(item.itemId){
+                R.id.search -> {
+                    navigateToSearch()
+                }
+            }
+            true
+        }
 
         homeViewModel.trendingMovies.observe(viewLifecycleOwner, Observer {
             when(it){
@@ -70,6 +84,18 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun navigateToSearch(){
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+            duration = 300
+        }
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+            duration = 300
+        }
+
+        val destination = HomeFragmentDirections.actionNavigationHomeToSearchFragment()
+        findNavController().navigate(destination)
     }
 
     fun navigateToDetailFromHero(

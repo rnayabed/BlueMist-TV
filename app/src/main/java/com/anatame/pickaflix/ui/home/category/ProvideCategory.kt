@@ -1,9 +1,7 @@
 package com.anatame.pickaflix.ui.home.category
 
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
-import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 
 interface ProvideCategory {
     fun setUpTrendingMovies()

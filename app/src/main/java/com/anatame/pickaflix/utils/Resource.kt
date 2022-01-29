@@ -1,7 +1,5 @@
 package com.anatame.pickaflix.utils
 
-import com.anatame.pickaflix.data.remote.PageParser.Home.DTO.MovieItem
-
 sealed class Resource<T>(
     val data: T? = null,
     val message: String? = null
