@@ -1,10 +1,17 @@
 package com.anatame.pickaflix.ui.home
 
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.transition.Transition
+import android.transition.TransitionListenerAdapter
+import android.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -38,6 +45,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeScreenAdapter: HomeScreenAdapter
     private lateinit var movieDao: MovieDao
 
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -64,8 +72,11 @@ class HomeFragment : Fragment() {
         val viewModelProviderFactory = HomeViewModelFactory(movieDao)
         homeViewModel = ViewModelProvider(this, viewModelProviderFactory).get(HomeViewModel::class.java)
 
-        homeViewModel.updateHomeScreenData()
-        homeViewModel.setFirstInit()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            homeViewModel.updateHomeScreenData()
+            homeViewModel.setFirstInit()
+        }, 500)
 
         binding.topAppBar.setOnMenuItemClickListener { item ->
             when(item.itemId){
@@ -76,6 +87,9 @@ class HomeFragment : Fragment() {
             true
         }
 
+
+
+
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Loading -> {
@@ -84,7 +98,10 @@ class HomeFragment : Fragment() {
 
                 is Resource.Success -> {
                     binding.loadingIcon.hide()
-                    it.data?.let { item -> setUpRecyclerView(item) }
+                    it.data?.let { item ->
+                        setUpRecyclerView(item)
+
+                    }
                 }
 
                 is Resource.Error -> {
@@ -141,6 +158,12 @@ class HomeFragment : Fragment() {
         movieItem: MovieItem
     ) {
         homeTransition()
+        Handler(Looper.getMainLooper()).postDelayed({
+            //doSomethingHere()
+            homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
+        }, 300)
+
+
 
         lifecycleScope.launch(Dispatchers.IO) {
             movieDao.upsert(Movie(
@@ -201,8 +224,12 @@ class HomeFragment : Fragment() {
             homeScreenAdapter = HomeScreenAdapter(context, this@HomeFragment, homeScreenData)
             adapter = homeScreenAdapter
             layoutManager = LinearLayoutManager(context)
-        }
 
+            homeViewModel.homeRvScrollState.observe(viewLifecycleOwner, Observer{
+                (binding.RVHomeScreen.layoutManager as LinearLayoutManager)
+                    .scrollToPositionWithOffset(it, 200)
+            })
+        }
     }
 
     fun handleWatchListLongClick(cardView: CardView, holder: HomeScreenAdapter.CategoryViewHolder, data: Movie) {
@@ -212,7 +239,11 @@ class HomeFragment : Fragment() {
                 data
             )
         )
-        findNavController().navigate(destination)
+        findNavController(+).navigate(destination)
+        Handler(Looper.getMainLooper()).postDelayed({
+            //doSomethingHere()
+            homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
+        }, 300)
     }
 
     fun removeFromWatchList(movie: Movie) {

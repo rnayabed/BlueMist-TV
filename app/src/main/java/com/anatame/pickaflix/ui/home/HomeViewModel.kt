@@ -20,6 +20,7 @@ class HomeViewModel(
     val movieDao: MovieDao
 ) : ViewModel() {
 
+    val homeRvScrollState: MutableLiveData<Int> = MutableLiveData()
     val homeScreenData : MutableLiveData<Resource<HomeScreenData>> = MutableLiveData()
     private lateinit var sliderData: List<HeroItem>
     private lateinit var movieData: List<MovieItem>

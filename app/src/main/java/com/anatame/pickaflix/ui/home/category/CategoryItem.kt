@@ -34,7 +34,8 @@ class CategoryItem(
     override fun setUpTrendingMovies() {
         setUpCategoryRV(
             "Trending Movies",
-            categoryData.getMovies(0, 23)
+            categoryData.getMovies(0, 23),
+            1
         )
     }
 
@@ -42,7 +43,8 @@ class CategoryItem(
         mBinding.apply {
             setUpCategoryRV(
                 "Popular Shows",
-                categoryData.getMovies(24, 47)
+                categoryData.getMovies(24, 47),
+                2
             )
         }
     }
@@ -51,7 +53,8 @@ class CategoryItem(
         mBinding.apply {
             setUpCategoryRV(
                 "Latest Movies",
-                categoryData.getMovies(48, 71)
+                categoryData.getMovies(48, 71),
+                3
             )
         }
     }
@@ -60,7 +63,8 @@ class CategoryItem(
         mBinding.apply {
             setUpCategoryRV(
                 "New TV Shows",
-                categoryData.getMovies(72, 95)
+                categoryData.getMovies(72, 95),
+                4
             )
         }
     }
@@ -69,7 +73,8 @@ class CategoryItem(
         mBinding.apply {
             setUpCategoryRV(
                 "Coming Soon",
-                categoryData.getMovies(96, 120)
+                categoryData.getMovies(96, 120),
+                5
             )
         }
     }
@@ -86,9 +91,9 @@ class CategoryItem(
         homeFragment.handleWatchListLongClick(cardView, holder, data)
     }
 
-    private fun setUpCategoryRV(categoryTitle: String, data: List<MovieItem>){
+    private fun setUpCategoryRV(categoryTitle: String, data: List<MovieItem>, homePosition: Int){
         mBinding.apply {
-            val adapter = MovieAdapter(context)
+            val adapter = MovieAdapter(context, homePosition)
             tvCategoryTitle.text = categoryTitle
             rvCategoryItems.adapter = adapter
             rvCategoryItems.layoutManager = LinearLayoutManager(

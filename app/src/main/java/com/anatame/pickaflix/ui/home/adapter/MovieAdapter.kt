@@ -16,9 +16,11 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import java.text.FieldPosition
 
 class MovieAdapter(
-    val context: Context
+    val context: Context,
+    val homePosition: Int
 ) : RecyclerView.Adapter<MovieAdapter.MovieItemViewHolder>() {
 
     inner class MovieItemViewHolder(val binding: ItemHomeCategoryRvItemBinding) :
@@ -57,9 +59,10 @@ class MovieAdapter(
         holder.itemView.apply {
 
             holder.binding.apply {
+
                 ViewCompat.setTransitionName(
                     cvCardContainer,
-                    "iv$position ${movieItem.Url}"
+                    "iv${position}${homePosition}${movieItem.Url}"
                 )
 
                 Glide.with(context)
@@ -76,6 +79,13 @@ class MovieAdapter(
 
     fun setOnItemClickListener(listener: (Int, MovieItem, CardView) -> Unit) {
         onItemClickListener = listener
+    }
+
+    fun getRandomString(length: Int) : String {
+        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
     }
 
 
