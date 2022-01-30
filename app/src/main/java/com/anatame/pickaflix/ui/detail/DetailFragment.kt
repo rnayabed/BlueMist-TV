@@ -101,7 +101,6 @@ class DetailFragment : Fragment() {
         }
     }
 
-
     fun setUpScreen(thumbnail: String){
         Glide.with(this).load(thumbnail)
             .centerCrop()
