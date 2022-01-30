@@ -14,20 +14,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <TextView
-        android:id="@+id/tv_id"
-        android:text="This is one"
-        android:translationZ="99dp"
-        android:textColor="@color/Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/heroCardContainer"
-        app:layout_constraintTop_toTopOf="@id/heroCardContainer"
-        app:layout_constraintRight_toRightOf="@id/heroCardContainer"
-        app:layout_constraintLeft_toLeftOf="@id/heroCardContainer"
-        />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_heroThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            />
 
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

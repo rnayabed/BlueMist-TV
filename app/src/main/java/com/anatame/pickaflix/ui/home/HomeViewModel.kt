@@ -1,5 +1,6 @@
 package com.anatame.pickaflix.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,30 +9,40 @@ import com.anatame.pickaflix.Logger
 import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.utils.Resource
+import com.anatame.pickaflix.utils.data.db.MovieDao
+import com.anatame.pickaflix.utils.data.db.entities.Movie
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.utils.parser.Parser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class HomeViewModel : ViewModel() {
-
+class HomeViewModel(
+    val movieDao: MovieDao
+) : ViewModel() {
 
     val homeScreenData : MutableLiveData<Resource<HomeScreenData>> = MutableLiveData()
+    private lateinit var sliderData: List<HeroItem>
+    private lateinit var movieData: List<MovieItem>
+    private lateinit var watchList: List<Movie>
+
+    private var isNotFirstInit: Boolean = false
 
     init {
         getHomeScreenData()
     }
 
-
     fun getHomeScreenData(){
         viewModelScope.launch(Dispatchers.IO) {
             homeScreenData.postValue(Resource.Loading())
             try {
-                val sliderData = Parser.getHeroSectionItems()
-                val movieData = Parser.getMovieList()
+                sliderData = Parser.getHeroSectionItems()
+                movieData = Parser.getMovieList()
+                watchList =  movieDao.getAll()
+
                 homeScreenData.postValue(Resource.Success(HomeScreenData(
                     sliderData,
+                    watchList,
                     movieData
                 )))
 
@@ -40,6 +51,30 @@ class HomeViewModel : ViewModel() {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun updateHomeScreenData() {
+        if (isNotFirstInit) {
+            viewModelScope.launch(Dispatchers.IO) {
+
+                watchList = movieDao.getAll()
+                Log.d("homeViewModel", "fuck")
+                homeScreenData.postValue(
+                    Resource.Success(
+                        HomeScreenData(
+                            sliderData,
+                            watchList,
+                            movieData
+                        )
+                    )
+                )
+            }
+        }
+
+    }
+
+    fun setFirstInit(){
+        isNotFirstInit = true
     }
 
 }

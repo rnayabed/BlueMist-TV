@@ -42,6 +42,22 @@
             android:name="cvTransitionId"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="movieItem"
+            app:argType="com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem"
+            app:nullable="true" />
+        <argument
+            android:name="heroItem"
+            app:argType="com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem"
+            app:nullable="true" />
+        <argument
+            android:name="searchItem"
+            app:argType="com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.SearchMovieItem"
+            app:nullable="true" />
+        <argument
+            android:name="watchList"
+            app:argType="com.anatame.pickaflix.utils.data.db.entities.Movie"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"

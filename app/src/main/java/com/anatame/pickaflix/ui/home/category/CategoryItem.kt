@@ -1,15 +1,19 @@
 package com.anatame.pickaflix.ui.home.category
 
 import android.content.Context
+import android.util.Log
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.Logger
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
+import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.home.adapter.MovieAdapter
+import com.anatame.pickaflix.ui.home.adapter.WatchListAdapter
 import com.anatame.pickaflix.utils.Resource
+import com.anatame.pickaflix.utils.data.db.entities.Movie
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieDetails
 
 class CategoryItem(
@@ -17,8 +21,16 @@ class CategoryItem(
     private val context: Context,
     private val homeFragment: HomeFragment,
     private val holder: HomeScreenAdapter.CategoryViewHolder,
-    private val categoryData: List<MovieItem>
+    private val homeScreenData: HomeScreenData
 ): ProvideCategory {
+
+    private val categoryData = homeScreenData.movieItems
+
+    override fun setUpWatchList() {
+        setUpWatchList("Continue Watching", homeScreenData.watchList)
+        Log.d("watchlistStatus", "watchlistcalled")
+    }
+
     override fun setUpTrendingMovies() {
         setUpCategoryRV(
             "Trending Movies",
@@ -62,9 +74,12 @@ class CategoryItem(
         }
     }
 
-
     override fun onClick(pos: Int, data: MovieItem, cardView: CardView) {
-        homeFragment.navigateToDetailFromCategory(cardView, holder)
+        homeFragment.navigateToDetailFromCategory(cardView, holder, data)
+    }
+
+    override fun onClickWatchList(pos: Int, data: Movie, cardView: CardView) {
+        homeFragment.navigateToDetailFromWatchList(cardView, holder, data)
     }
 
     private fun setUpCategoryRV(categoryTitle: String, data: List<MovieItem>){
@@ -83,6 +98,26 @@ class CategoryItem(
             adapter.differ.submitList(data)
             adapter.setOnItemClickListener{pos, item, cardView ->
                 onClick(pos, item, cardView)
+            }
+        }
+    }
+
+    private fun setUpWatchList(categoryTitle: String, data: List<Movie>){
+        mBinding.apply {
+            val adapter = WatchListAdapter(context)
+            tvCategoryTitle.text = categoryTitle
+            rvCategoryItems.adapter = adapter
+            rvCategoryItems.layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            rvCategoryItems.setHasFixedSize(true);
+            rvCategoryItems.isNestedScrollingEnabled = false;
+
+            adapter.differ.submitList(data)
+            adapter.setOnItemClickListener{pos, item, cardView ->
+                onClickWatchList(pos, item, cardView)
             }
         }
     }

@@ -16,6 +16,7 @@ import com.anatame.pickaflix.utils.constants.Constants.NEW_TVSHOWS
 import com.anatame.pickaflix.utils.constants.Constants.POPULAR_SHOWS
 import com.anatame.pickaflix.utils.constants.Constants.TRENDING_MOVIES
 import com.anatame.pickaflix.utils.constants.Constants.VIEW_PAGER
+import com.anatame.pickaflix.utils.constants.Constants.WATCHLIST
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 
 class HomeScreenAdapter(
@@ -27,7 +28,6 @@ class HomeScreenAdapter(
     inner class ViewPagerViewHolder(
         val pagerBinding: ItemHomeViewpagerBinding
     ):  RecyclerView.ViewHolder(pagerBinding.root)
-
 
     inner class CategoryViewHolder(
         val categoryItemBinding: ItemHomeCategoryBinding
@@ -57,15 +57,18 @@ class HomeScreenAdapter(
 
         adapter.differ.submitList(homeScreenData.sliderItems)
 
-        adapter.setOnItemClickListener{pos, hero, cardView ->
-            homeFragment.navigateToDetailFromHero(cardView, holder)
+        adapter.setOnItemClickListener{pos, heroItem, cardView ->
+            homeFragment.navigateToDetailFromHero(cardView, holder, heroItem)
         }
     }
 
     private fun setUpCategoryHolder(holder: CategoryViewHolder, viewType: Int) {
         val mBinding = holder.categoryItemBinding
-        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder, homeScreenData.movieItems)
+        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder, homeScreenData)
         when(viewType){
+            WATCHLIST -> {
+                categoryItem.setUpWatchList()
+            }
             TRENDING_MOVIES -> categoryItem.setUpTrendingMovies()
             POPULAR_SHOWS -> categoryItem.setUpPopularShows()
             LATEST_MOVIES -> categoryItem.setUpLatestMovies()
@@ -77,16 +80,21 @@ class HomeScreenAdapter(
     override fun getItemViewType(position: Int): Int {
         return when(position){
             0 -> VIEW_PAGER
-            1 ->  TRENDING_MOVIES
-            2 ->  POPULAR_SHOWS
-            3 ->  LATEST_MOVIES
-            4 ->  NEW_TVSHOWS
+            1 ->  WATCHLIST
+            2 ->  TRENDING_MOVIES
+            3 ->  POPULAR_SHOWS
+            4 ->  LATEST_MOVIES
+            5 -> NEW_TVSHOWS
             else -> COMING_SOON
         }
     }
 
     override fun getItemCount(): Int {
-        return 6
+        return 7
+    }
+
+    fun showContinueWatchingCard() {
+
     }
 
 }

@@ -8,13 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentDetailBinding
+import com.anatame.pickaflix.ui.home.HomeViewModel
+import com.bumptech.glide.Glide
 import com.google.android.material.transition.MaterialContainerTransform
 
 
 class DetailFragment : Fragment() {
+    private lateinit var detailViewModel: DetailViewModel
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
     private val args: DetailFragmentArgs by navArgs()
@@ -32,6 +36,8 @@ class DetailFragment : Fragment() {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
+
         args.cvTransitionId?.let {
             ViewCompat.setTransitionName(binding.cvDetailContainer, it)
         }
@@ -45,5 +51,24 @@ class DetailFragment : Fragment() {
         }
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        args.heroItem?.let {
+            setUpScreen(it.thumbnailUrl)
+        }
+
+        args.movieItem?.let{
+            setUpScreen(it.thumbnailUrl)
+        }
+    }
+
+
+    fun setUpScreen(thumbnail: String){
+        Glide.with(this).load(thumbnail)
+            .centerCrop()
+            .into(binding.ivMovieThumnail)
     }
 }

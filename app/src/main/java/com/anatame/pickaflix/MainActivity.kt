@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.anatame.pickaflix.databinding.ActivityMainBinding
+import com.anatame.pickaflix.utils.data.db.MovieDatabase
 
 class MainActivity : AppCompatActivity() {
 

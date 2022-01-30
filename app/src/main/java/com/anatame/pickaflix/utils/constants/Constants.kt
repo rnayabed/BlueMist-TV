@@ -7,9 +7,9 @@ object Constants {
 
     const val VIEW_PAGER = 0
     const val WATCHLIST = 1
-    const val TRENDING_MOVIES = 1
-    const val POPULAR_SHOWS = 2
-    const val LATEST_MOVIES = 3
-    const val NEW_TVSHOWS = 4
-    const val COMING_SOON = 5
+    const val TRENDING_MOVIES = 2
+    const val POPULAR_SHOWS = 3
+    const val LATEST_MOVIES = 4
+    const val NEW_TVSHOWS = 5
+    const val COMING_SOON = 6
 }

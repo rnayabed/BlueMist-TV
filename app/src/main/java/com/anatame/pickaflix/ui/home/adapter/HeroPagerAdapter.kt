@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerItemBinding
+import com.bumptech.glide.Glide
 
 
 class HeroPagerAdapter(
@@ -49,8 +50,12 @@ class HeroPagerAdapter(
 
         holder.itemView.apply {
             holder.binding.apply {
-                 tvId.text = heroItem.title
-                    ViewCompat.setTransitionName(
+                Glide.with(context)
+                    .load(heroItem.thumbnailUrl)
+                    .dontTransform()
+                    .into(ivHeroThumbnail)
+
+                ViewCompat.setTransitionName(
                     heroCardContainer,
                     "iv$position ${heroItem.Url}"
                 )

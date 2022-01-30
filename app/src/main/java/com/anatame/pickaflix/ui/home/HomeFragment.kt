@@ -1,6 +1,7 @@
 package com.anatame.pickaflix.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.NavHostFragment.findNavController
@@ -22,15 +24,23 @@ import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.utils.Resource
+import com.anatame.pickaflix.utils.data.db.MovieDao
+import com.anatame.pickaflix.utils.data.db.MovieDatabase
+import com.anatame.pickaflix.utils.data.db.entities.Movie
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
     private lateinit var homeScreenAdapter: HomeScreenAdapter
+    private lateinit var movieDao: MovieDao
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -41,12 +51,26 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         setHasOptionsMenu(true)
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        movieDao = context?.let { MovieDatabase.invoke(it).getMovieDao() }!!
+        val viewModelProviderFactory = HomeViewModelFactory(movieDao)
+        homeViewModel = ViewModelProvider(this, viewModelProviderFactory).get(HomeViewModel::class.java)
+
+        homeViewModel.updateHomeScreenData()
+        homeViewModel.setFirstInit()
+
         binding.topAppBar.setOnMenuItemClickListener { item ->
             when(item.itemId){
                 R.id.search -> {
@@ -74,13 +98,6 @@ class HomeFragment : Fragment() {
             }
         })
 
-        return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
     }
 
     override fun onDestroyView() {
@@ -102,11 +119,18 @@ class HomeFragment : Fragment() {
 
     fun navigateToDetailFromHero(
         cardView: CardView,
-        holder: HomeScreenAdapter.ViewPagerViewHolder
+        holder: HomeScreenAdapter.ViewPagerViewHolder,
+        heroItem: HeroItem
     ) {
         homeTransition()
 
-        val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(cardView.transitionName)
+        val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(
+            cardView.transitionName,
+            null,
+            heroItem,
+            null,
+            null
+        )
         val extras = FragmentNavigatorExtras(cardView to cardView.transitionName)
 
         holder.itemView.findNavController().navigate(
@@ -117,11 +141,48 @@ class HomeFragment : Fragment() {
 
     fun navigateToDetailFromCategory(
         cardView: CardView,
-        holder: HomeScreenAdapter.CategoryViewHolder
+        holder: HomeScreenAdapter.CategoryViewHolder,
+        movieItem: MovieItem
     ) {
         homeTransition()
 
-        val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(cardView.transitionName)
+        lifecycleScope.launch(Dispatchers.IO) {
+            movieDao.upsert(Movie(
+                title = movieItem.title,
+                thumbnailUrl = movieItem.thumbnailUrl,
+                source = movieItem.Url
+            ))
+        }
+
+        val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(
+            cardView.transitionName,
+            movieItem,
+            null,
+            null,
+            null
+        )
+        val extras = FragmentNavigatorExtras(cardView to cardView.transitionName)
+
+        holder.itemView.findNavController().navigate(
+            directions,
+            extras
+        )
+    }
+
+    fun navigateToDetailFromWatchList(
+        cardView: CardView,
+        holder: HomeScreenAdapter.CategoryViewHolder,
+        movie: Movie
+    ) {
+        homeTransition()
+
+        val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(
+            cardView.transitionName,
+            null,
+            null,
+            null,
+            movie
+        )
         val extras = FragmentNavigatorExtras(cardView to cardView.transitionName)
 
         holder.itemView.findNavController().navigate(
@@ -145,5 +206,7 @@ class HomeFragment : Fragment() {
             adapter = homeScreenAdapter
             layoutManager = LinearLayoutManager(context)
         }
+
     }
+
 }
