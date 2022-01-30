@@ -27,8 +27,8 @@ class HomeViewModel(
         MutableLiveData(0),
         MutableLiveData(0),
         MutableLiveData(0),
-        MutableLiveData(0),
     )
+    val heroItemScrollState = MutableLiveData(0)
 
     val homeRvScrollState: MutableLiveData<Int> = MutableLiveData()
     val homeScreenData : MutableLiveData<Resource<HomeScreenData>> = MutableLiveData()

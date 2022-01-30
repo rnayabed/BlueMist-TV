@@ -1,12 +1,15 @@
 package com.anatame.pickaflix.ui.home.adapter
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
 import com.anatame.pickaflix.model.HomeScreenData
@@ -20,13 +23,13 @@ import com.anatame.pickaflix.utils.constants.Constants.POPULAR_SHOWS
 import com.anatame.pickaflix.utils.constants.Constants.TRENDING_MOVIES
 import com.anatame.pickaflix.utils.constants.Constants.VIEW_PAGER
 import com.anatame.pickaflix.utils.constants.Constants.WATCHLIST
-import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 
 class HomeScreenAdapter(
     val context: Context,
     val homeFragment: HomeFragment,
     val homeScreenData: HomeScreenData,
     val hScrollStates: HomeScrollStates,
+    val heroScrollState: MutableLiveData<Int>,
     val lifecycleOwner: LifecycleOwner
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -59,11 +62,20 @@ class HomeScreenAdapter(
     private fun setUpViewPagerHolder(holder: ViewPagerViewHolder){
         val adapter = HeroPagerAdapter(context)
         holder.pagerBinding.vpHeroPager.adapter = adapter
+        holder.pagerBinding.vpHeroPager.setCurrentItem(3, false)
 
         adapter.differ.submitList(homeScreenData.sliderItems)
 
+        heroScrollState.observe(lifecycleOwner, Observer{
+            holder.pagerBinding.vpHeroPager.setCurrentItem(it, false)
+            Log.d("viewpagerstate", "bruh")
+        })
+
         adapter.setOnItemClickListener{pos, heroItem, cardView ->
-            homeFragment.navigateToDetailFromHero(cardView, holder, heroItem)
+            Handler(Looper.getMainLooper()).postDelayed({
+                heroScrollState.postValue(pos)
+            }, 300)
+            homeFragment.navigateToDetailFromHero(cardView, holder, heroItem, pos)
         }
     }
 

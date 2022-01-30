@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 data class HomeScrollStates (
-    val heroScrollState : MutableLiveData<Int>,
-
     val trendingScrollState : MutableLiveData<Int>,
     val popularScrollState : MutableLiveData<Int>,
     val latestMoviesScrollState : MutableLiveData<Int>,

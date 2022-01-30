@@ -130,7 +130,8 @@ class HomeFragment : Fragment() {
     fun navigateToDetailFromHero(
         cardView: CardView,
         holder: HomeScreenAdapter.ViewPagerViewHolder,
-        heroItem: HeroItem
+        heroItem: HeroItem,
+        pos: Int
     ) {
         homeTransition()
 
@@ -223,6 +224,7 @@ class HomeFragment : Fragment() {
                 this@HomeFragment,
                 homeScreenData,
                 homeViewModel.homeItemScrollStates,
+                homeViewModel.heroItemScrollState,
                 viewLifecycleOwner
             )
             adapter = homeScreenAdapter
