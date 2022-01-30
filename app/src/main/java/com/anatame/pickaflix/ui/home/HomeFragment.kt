@@ -72,11 +72,7 @@ class HomeFragment : Fragment() {
         val viewModelProviderFactory = HomeViewModelFactory(movieDao)
         homeViewModel = ViewModelProvider(this, viewModelProviderFactory).get(HomeViewModel::class.java)
 
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            homeViewModel.updateHomeScreenData()
-            homeViewModel.setFirstInit()
-        }, 500)
+        homeViewModel.setFirstInit()
 
         binding.topAppBar.setOnMenuItemClickListener { item ->
             when(item.itemId){
@@ -158,12 +154,6 @@ class HomeFragment : Fragment() {
         movieItem: MovieItem
     ) {
         homeTransition()
-        Handler(Looper.getMainLooper()).postDelayed({
-            //doSomethingHere()
-            homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
-        }, 300)
-
-
 
         lifecycleScope.launch(Dispatchers.IO) {
             movieDao.upsert(Movie(
@@ -171,6 +161,12 @@ class HomeFragment : Fragment() {
                 thumbnailUrl = movieItem.thumbnailUrl,
                 source = movieItem.Url
             ))
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                //doSomethingHere()
+                homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
+                homeViewModel.updateHomeScreenData()
+                }, 300)
         }
 
         val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(
@@ -239,7 +235,7 @@ class HomeFragment : Fragment() {
                 data
             )
         )
-        findNavController(+).navigate(destination)
+        findNavController().navigate(destination)
         Handler(Looper.getMainLooper()).postDelayed({
             //doSomethingHere()
             homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
