@@ -82,6 +82,10 @@ class CategoryItem(
         homeFragment.navigateToDetailFromWatchList(cardView, holder, data)
     }
 
+    override fun onLongClickWatchList(pos: Int, data: Movie, cardView: CardView){
+        homeFragment.handleWatchListLongClick(cardView, holder, data)
+    }
+
     private fun setUpCategoryRV(categoryTitle: String, data: List<MovieItem>){
         mBinding.apply {
             val adapter = MovieAdapter(context)
@@ -118,6 +122,10 @@ class CategoryItem(
             adapter.differ.submitList(data)
             adapter.setOnItemClickListener{pos, item, cardView ->
                 onClickWatchList(pos, item, cardView)
+            }
+
+            adapter.setOnItemLongClickListener{pos, item, cardView ->
+                onLongClickWatchList(pos, item, cardView)
             }
         }
     }

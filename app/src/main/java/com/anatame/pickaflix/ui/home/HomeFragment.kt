@@ -1,13 +1,10 @@
 package com.anatame.pickaflix.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -16,13 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
+import com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.MovieDao
 import com.anatame.pickaflix.utils.data.db.MovieDatabase
@@ -33,7 +30,6 @@ import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class HomeFragment : Fragment() {
 
@@ -74,9 +70,7 @@ class HomeFragment : Fragment() {
         binding.topAppBar.setOnMenuItemClickListener { item ->
             when(item.itemId){
                 R.id.search -> {
-                   // navigateToSearch()
-                    val destination = HomeFragmentDirections.actionNavigationHomeToHomeListDialogFragment()
-                    findNavController().navigate(destination)
+                    navigateToSearch()
                 }
             }
             true
@@ -209,6 +203,23 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
+    }
+
+    fun handleWatchListLongClick(cardView: CardView, holder: HomeScreenAdapter.CategoryViewHolder, data: Movie) {
+        val destination = HomeFragmentDirections.actionNavigationHomeToHomeListDialogFragment(
+            HomeBottomSheetData(
+                this@HomeFragment,
+                data
+            )
+        )
+        findNavController().navigate(destination)
+    }
+
+    fun removeFromWatchList(movie: Movie) {
+        lifecycleScope.launch(Dispatchers.IO){
+            movieDao.deleteMovieFromWatchList(movie)
+            homeViewModel.updateHomeScreenData()
+        }
     }
 
 }

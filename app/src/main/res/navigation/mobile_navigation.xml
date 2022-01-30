@@ -71,5 +71,10 @@
         android:id="@+id/homeListDialogFragment"
         android:name="com.anatame.pickaflix.ui.views.bottomsheets.HomeListDialogFragment"
         android:label="fragment_home_list_dialog_list_dialog"
-        tools:layout="@layout/bottomsheet_home" />
+        tools:layout="@layout/bottomsheet_home" >
+        <argument
+            android:name="homeBottomSheetData"
+            app:argType="com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData"
+            app:nullable="true" />
+    </dialog>
 </navigation>

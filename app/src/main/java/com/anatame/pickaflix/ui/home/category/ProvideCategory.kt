@@ -13,4 +13,5 @@ interface ProvideCategory {
     fun setUpComingSoon()
     fun onClick(pos: Int, data: MovieItem, cardView: CardView)
     fun onClickWatchList(pos: Int, data: Movie, cardView: CardView)
+    fun onLongClickWatchList(pos: Int, data: Movie, cardView: CardView)
 }

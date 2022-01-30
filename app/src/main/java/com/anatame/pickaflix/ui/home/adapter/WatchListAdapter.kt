@@ -52,6 +52,7 @@ class WatchListAdapter(
     }
 
     private var onItemClickListener: ((Int, Movie, CardView) -> Unit)? = null
+    private var onItemLongClickListener: ((Int, Movie, CardView) -> Unit)? = null
 
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {
         val movie = differ.currentList[position]
@@ -71,6 +72,12 @@ class WatchListAdapter(
 
             setOnClickListener { view ->
                    onItemClickListener?.let { it(position, movie, holder.binding.cvCardContainer) }
+
+            }
+
+            setOnLongClickListener{ view ->
+                onItemLongClickListener?.let { it(position, movie, holder.binding.cvCardContainer) }
+                true
             }
         }
     }
@@ -79,6 +86,9 @@ class WatchListAdapter(
         onItemClickListener = listener
     }
 
+    fun setOnItemLongClickListener(listener: (Int, Movie, CardView) -> Unit) {
+        onItemLongClickListener = listener
+    }
 
 }
 

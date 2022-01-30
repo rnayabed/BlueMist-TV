@@ -1,9 +1,6 @@
 package com.anatame.pickaflix.utils.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.anatame.pickaflix.utils.data.db.entities.HomeScreenCache
 import com.anatame.pickaflix.utils.data.db.entities.Movie
 
@@ -20,5 +17,8 @@ interface MovieDao {
 
     @Query("SELECT * FROM homeScreenCache")
     fun getHomeScreenData(): HomeScreenCache
+
+    @Delete
+    fun deleteMovieFromWatchList(movie: Movie)
 
 }
