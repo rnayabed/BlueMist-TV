@@ -75,6 +75,18 @@ class DetailViewModel: ViewModel() {
 
         }
     }
+    fun getSelectedEpisodeVid(episodeDataID: String){
+        viewModelScope.launch (Dispatchers.IO) {
+            val servers = Parser.getServers(episodeDataID)
+            serverList.postValue(Resource.Success(servers))
+            Log.d("movieSeasons", servers.toString())
+
+            val vidSrc = Parser.getVidSource(servers[1].serverDataId)
+            Log.d("movieSeasons", vidSrc.toString())
+            vidEmbedLink.postValue(Resource.Success(vidSrc.link))
+        }
+    }
+
 
 
     fun getMovieDetails(movieSrc: String){

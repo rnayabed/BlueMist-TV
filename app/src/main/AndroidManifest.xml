@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pickaflix">
         <activity
+            android:configChanges="orientation|screenSize|layoutDirection"
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">

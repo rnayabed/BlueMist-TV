@@ -82,5 +82,31 @@ dependencies {
     // Coroutine Lifecycle Scopes
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+
+    // dependency for exoplayer
+
+    implementation "com.google.android.exoplayer:exoplayer:2.16.1"
+
+// for core support in exoplayer.
+
+    implementation "com.google.android.exoplayer:exoplayer-core:2.16.1"
+
+
+
+// for adding dash support in our exoplayer.
+
+    implementation "com.google.android.exoplayer:exoplayer-dash:2.16.1"
+
+// for adding hls support in exoplayer.
+
+    implementation "com.google.android.exoplayer:exoplayer-hls:2.16.1"
+
+// for smooth streaming of video in our exoplayer.
+
+    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:r2.4.0"
+
+// for generating default ui of exoplayer
+
+    implementation "com.google.android.exoplayer:exoplayer-ui:r2.4.0"
 }
 
