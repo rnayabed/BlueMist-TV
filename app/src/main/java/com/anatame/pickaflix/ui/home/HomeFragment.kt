@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
+import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
@@ -29,6 +30,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
+    private lateinit var homeScreenAdapter: HomeScreenAdapter
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -54,7 +56,7 @@ class HomeFragment : Fragment() {
             true
         }
 
-        homeViewModel.movieItems.observe(viewLifecycleOwner, Observer {
+        homeViewModel.homeScreenData.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Loading -> {
                     binding.loadingIcon.show()
@@ -62,7 +64,7 @@ class HomeFragment : Fragment() {
 
                 is Resource.Success -> {
                     binding.loadingIcon.hide()
-                    it.data?.let { items -> setUpRecyclerView(items) }
+                    it.data?.let { item -> setUpRecyclerView(item) }
                 }
 
                 is Resource.Error -> {
@@ -137,9 +139,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun setUpRecyclerView(categoryData: List<MovieItem>){
+    fun setUpRecyclerView(homeScreenData: HomeScreenData){
         binding.RVHomeScreen.apply {
-            adapter = HomeScreenAdapter(context, this@HomeFragment, categoryData)
+            homeScreenAdapter = HomeScreenAdapter(context, this@HomeFragment, homeScreenData)
+            adapter = homeScreenAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }

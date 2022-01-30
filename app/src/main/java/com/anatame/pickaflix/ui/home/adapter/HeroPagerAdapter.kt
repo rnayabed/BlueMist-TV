@@ -21,7 +21,7 @@ class HeroPagerAdapter(
 
     private val differCallback = object : DiffUtil.ItemCallback<HeroItem>() {
         override fun areItemsTheSame(oldItem: HeroItem, newItem: HeroItem): Boolean {
-            return oldItem.source == newItem.source
+            return oldItem.Url == newItem.Url
         }
 
         override fun areContentsTheSame(oldItem: HeroItem, newItem: HeroItem): Boolean {
@@ -52,7 +52,7 @@ class HeroPagerAdapter(
                  tvId.text = heroItem.title
                     ViewCompat.setTransitionName(
                     heroCardContainer,
-                    "iv$position ${heroItem.source}"
+                    "iv$position ${heroItem.Url}"
                 )
             }
             setOnClickListener {view ->

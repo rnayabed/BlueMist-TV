@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
+import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.category.CategoryItem
 import com.anatame.pickaflix.utils.constants.Constants.COMING_SOON
@@ -20,7 +21,7 @@ import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 class HomeScreenAdapter(
     val context: Context,
     val homeFragment: HomeFragment,
-    val categoryData: List<MovieItem>
+    val homeScreenData: HomeScreenData
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewPagerViewHolder(
@@ -31,6 +32,7 @@ class HomeScreenAdapter(
     inner class CategoryViewHolder(
         val categoryItemBinding: ItemHomeCategoryBinding
     ): RecyclerView.ViewHolder(categoryItemBinding.root)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val viewPagerItemBinding = ItemHomeViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -52,30 +54,8 @@ class HomeScreenAdapter(
     private fun setUpViewPagerHolder(holder: ViewPagerViewHolder){
         val adapter = HeroPagerAdapter(context)
         holder.pagerBinding.vpHeroPager.adapter = adapter
-        val heroList = listOf(
-            HeroItem(
-                backgroundImageUrl = "String",
-                title = "String",
-                source = "dgdg",
-                duration = "String",
-                rating = "String"
-            ),
-            HeroItem(
-                backgroundImageUrl = "df",
-                title = "String",
-                source = "Strfdging",
-                duration = "String",
-                rating = "String"
-            ),
-            HeroItem(
-                backgroundImageUrl = "Stringdf",
-                title = "String",
-                source = "dg",
-                duration = "String",
-                rating = "String"
-            )
-        )
-        adapter.differ.submitList(heroList)
+
+        adapter.differ.submitList(homeScreenData.sliderItems)
 
         adapter.setOnItemClickListener{pos, hero, cardView ->
             homeFragment.navigateToDetailFromHero(cardView, holder)
@@ -84,7 +64,7 @@ class HomeScreenAdapter(
 
     private fun setUpCategoryHolder(holder: CategoryViewHolder, viewType: Int) {
         val mBinding = holder.categoryItemBinding
-        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder, categoryData)
+        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder, homeScreenData.movieItems)
         when(viewType){
             TRENDING_MOVIES -> categoryItem.setUpTrendingMovies()
             POPULAR_SHOWS -> categoryItem.setUpPopularShows()

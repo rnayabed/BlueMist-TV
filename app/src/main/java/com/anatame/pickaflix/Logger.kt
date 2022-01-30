@@ -1,7 +1,7 @@
 package com.anatame.pickaflix
 
 object Logger{
-    fun Log(data: Any){
-        android.util.Log.d("DataLog", data.toString())
+    fun Log(tag: String,data: Any){
+        android.util.Log.d("$tag", data.toString())
     }
 }
