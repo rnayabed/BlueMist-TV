@@ -32,7 +32,7 @@
 
     <com.anatame.pickaflix.ui.views.HeadlessWebView
         android:translationZ="-10dp"
-        android:id="@+id/epsPlayerWV"
+        android:id="@+id/hWebView"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

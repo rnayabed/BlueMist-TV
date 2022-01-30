@@ -1,6 +1,10 @@
 package com.anatame.pickaflix.utils.parser
 
 import android.util.Log
+import com.anatame.pickaflix.ui.detail.models.EpisodeItem
+import com.anatame.pickaflix.ui.detail.models.MovieDetails
+import com.anatame.pickaflix.ui.detail.models.SeasonItem
+import com.anatame.pickaflix.ui.detail.models.ServerItem
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.*
 import com.anatame.pickaflix.utils.data.remote.retrofit.RetrofitInstance
 import com.anatame.pickaflix.utils.constants.Constants.MOVIE_LIST_SELECTOR
@@ -35,10 +39,12 @@ object Parser {
             serverName = item.text()
             serverDataID = item.attr("data-linkid")
 
-            serverList.add(ServerItem(
+            serverList.add(
+                ServerItem(
                 serverName,
                 serverDataID
-            ))
+            )
+            )
         }
 
         Log.d("serverList", """
@@ -62,10 +68,12 @@ object Parser {
             serverName = item.text()
             serverDataID = item.attr("data-id")
 
-            serverList.add(ServerItem(
+            serverList.add(
+                ServerItem(
                 serverName,
                 serverDataID
-            ))
+            )
+            )
         }
 
         Log.d("serverList", """

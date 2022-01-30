@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.anatame.pickaflix.Logger
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.model.HomeScreenData
@@ -14,9 +13,7 @@ import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.home.adapter.MovieAdapter
 import com.anatame.pickaflix.ui.home.adapter.WatchListAdapter
-import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.entities.Movie
-import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieDetails
 
 class CategoryItem(
     private val mBinding: ItemHomeCategoryBinding,

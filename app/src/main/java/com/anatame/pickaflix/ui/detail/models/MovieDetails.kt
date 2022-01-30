@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO
+package com.anatame.pickaflix.ui.detail.models
 
 
 data class MovieDetails(
