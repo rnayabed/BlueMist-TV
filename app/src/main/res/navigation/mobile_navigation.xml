@@ -15,7 +15,10 @@
             app:destination="@id/detailFragment" />
         <action
             android:id="@+id/action_navigation_home_to_searchFragment"
-            app:destination="@id/searchFragment" />/>
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_homeListDialogFragment"
+            app:destination="@id/homeListDialogFragment" />/>
     </fragment>
 
     <fragment
@@ -64,4 +67,9 @@
         android:name="com.anatame.pickaflix.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <dialog
+        android:id="@+id/homeListDialogFragment"
+        android:name="com.anatame.pickaflix.ui.views.bottomsheets.HomeListDialogFragment"
+        android:label="fragment_home_list_dialog_list_dialog"
+        tools:layout="@layout/bottomsheet_home" />
 </navigation>

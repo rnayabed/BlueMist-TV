@@ -74,7 +74,9 @@ class HomeFragment : Fragment() {
         binding.topAppBar.setOnMenuItemClickListener { item ->
             when(item.itemId){
                 R.id.search -> {
-                    navigateToSearch()
+                   // navigateToSearch()
+                    val destination = HomeFragmentDirections.actionNavigationHomeToHomeListDialogFragment()
+                    findNavController().navigate(destination)
                 }
             }
             true
