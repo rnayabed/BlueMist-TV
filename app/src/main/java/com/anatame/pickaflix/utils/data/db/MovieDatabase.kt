@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.anatame.pickaflix.utils.data.db.entities.Movie
+import com.anatame.pickaflix.utils.data.db.entities.HomeScreenCache
 
 @Database(
-    entities = [Movie::class],
+    entities = [Movie::class, HomeScreenCache::class],
     version = 1
 )
+@TypeConverters(Converters::class)
 abstract class MovieDatabase: RoomDatabase() {
     abstract fun getMovieDao(): MovieDao
 
