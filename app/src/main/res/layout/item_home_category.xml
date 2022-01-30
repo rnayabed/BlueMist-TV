@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tv_categoryTitle"
@@ -34,6 +33,7 @@
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

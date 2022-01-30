@@ -1,6 +1,7 @@
 package com.anatame.pickaflix.ui.home.adapter
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
@@ -10,6 +11,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryRvItemBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 
 class MovieAdapter(
     val context: Context
@@ -55,6 +61,11 @@ class MovieAdapter(
                     cvCardContainer,
                     "iv$position ${movieItem.Url}"
                 )
+
+                Glide.with(context)
+                    .load(movieItem.thumbnailUrl)
+                    .dontTransform()
+                    .into(ivThumbnail)
             }
 
             setOnClickListener { view ->

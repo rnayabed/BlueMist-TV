@@ -15,10 +15,12 @@ import com.anatame.pickaflix.utils.constants.Constants.NEW_TVSHOWS
 import com.anatame.pickaflix.utils.constants.Constants.POPULAR_SHOWS
 import com.anatame.pickaflix.utils.constants.Constants.TRENDING_MOVIES
 import com.anatame.pickaflix.utils.constants.Constants.VIEW_PAGER
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 
 class HomeScreenAdapter(
     val context: Context,
-    val homeFragment: HomeFragment
+    val homeFragment: HomeFragment,
+    val categoryData: List<MovieItem>
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewPagerViewHolder(
@@ -82,7 +84,7 @@ class HomeScreenAdapter(
 
     private fun setUpCategoryHolder(holder: CategoryViewHolder, viewType: Int) {
         val mBinding = holder.categoryItemBinding
-        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder)
+        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder, categoryData)
         when(viewType){
             TRENDING_MOVIES -> categoryItem.setUpTrendingMovies()
             POPULAR_SHOWS -> categoryItem.setUpPopularShows()

@@ -36,6 +36,7 @@
         <androidx.recyclerview.widget.RecyclerView
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             android:id="@+id/RV_HomeScreen"
+            android:layout_marginBottom="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"

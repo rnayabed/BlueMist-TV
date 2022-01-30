@@ -21,6 +21,7 @@ import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.utils.Resource
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 
@@ -44,8 +45,6 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         setHasOptionsMenu(true)
-        setUpRecyclerView()
-
         binding.topAppBar.setOnMenuItemClickListener { item ->
             when(item.itemId){
                 R.id.search -> {
@@ -55,7 +54,7 @@ class HomeFragment : Fragment() {
             true
         }
 
-        homeViewModel.trendingMovies.observe(viewLifecycleOwner, Observer {
+        homeViewModel.movieItems.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Loading -> {
                     binding.loadingIcon.show()
@@ -63,6 +62,7 @@ class HomeFragment : Fragment() {
 
                 is Resource.Success -> {
                     binding.loadingIcon.hide()
+                    it.data?.let { items -> setUpRecyclerView(items) }
                 }
 
                 is Resource.Error -> {
@@ -137,9 +137,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun setUpRecyclerView(){
+    fun setUpRecyclerView(categoryData: List<MovieItem>){
         binding.RVHomeScreen.apply {
-            adapter = HomeScreenAdapter(context, this@HomeFragment)
+            adapter = HomeScreenAdapter(context, this@HomeFragment, categoryData)
             layoutManager = LinearLayoutManager(context)
         }
     }

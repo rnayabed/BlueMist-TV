@@ -3,96 +3,62 @@ package com.anatame.pickaflix.ui.home.category
 import android.content.Context
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.anatame.pickaflix.Logger
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.home.adapter.MovieAdapter
+import com.anatame.pickaflix.utils.Resource
+import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieDetails
 
 class CategoryItem(
     private val mBinding: ItemHomeCategoryBinding,
     private val context: Context,
     private val homeFragment: HomeFragment,
-    private val holder: HomeScreenAdapter.CategoryViewHolder
+    private val holder: HomeScreenAdapter.CategoryViewHolder,
+    private val categoryData: List<MovieItem>
 ): ProvideCategory {
     override fun setUpTrendingMovies() {
-        mBinding.apply {
-            val adapter = MovieAdapter(context)
-            tvCategoryTitle.text = "Trending Movies"
-            rvCategoryItems.adapter = adapter
-            rvCategoryItems.layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            rvCategoryItems.setHasFixedSize(true);
-            rvCategoryItems.isNestedScrollingEnabled = false;
-            val movieList = listOf(
-                MovieItem(
-                    title= "String",
-                    thumbnailUrl= "String",
-                    Url= "fhfh",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                ),
-                MovieItem(
-                    title= "String",
-                    thumbnailUrl= "String",
-                    Url= "fhfhhfs",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                ),
-                MovieItem(
-                    title= "fhfhfh",
-                    thumbnailUrl= "String",
-                    Url= "fsf",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                ),
-                MovieItem(
-                    title= "String",
-                    thumbnailUrl= "Stdggring",
-                    Url= "sfStssrifnfg",
-                    releaseDate= "String",
-                    quality= "String",
-                    length= "String",
-                    movieType= "String",
-                )
-            )
-            adapter.differ.submitList(movieList)
-            adapter.setOnItemClickListener{pos, item, cardView ->
-                onClick(pos, item, cardView)
-            }
-        }
+        setUpCategoryRV(
+            "Trending Movies",
+            categoryData.getMovies(0, 23)
+        )
     }
 
     override fun setUpPopularShows() {
         mBinding.apply {
-            tvCategoryTitle.text = "Popular Shows"
+            setUpCategoryRV(
+                "Popular Shows",
+                categoryData.getMovies(24, 47)
+            )
         }
     }
 
     override fun setUpLatestMovies() {
         mBinding.apply {
-            tvCategoryTitle.text = "Latest Movies"
+            setUpCategoryRV(
+                "Latest Movies",
+                categoryData.getMovies(48, 71)
+            )
         }
     }
 
     override fun setUpNewTVShows() {
         mBinding.apply {
-            tvCategoryTitle.text = "New TV Shows"
+            setUpCategoryRV(
+                "New TV Shows",
+                categoryData.getMovies(72, 95)
+            )
         }
     }
 
     override fun setUpComingSoon() {
         mBinding.apply {
-            tvCategoryTitle.text = "Coming Soon!"
+            setUpCategoryRV(
+                "Coming Soon",
+                categoryData.getMovies(96, 120)
+            )
         }
     }
 
@@ -101,4 +67,35 @@ class CategoryItem(
         homeFragment.navigateToDetailFromCategory(cardView, holder)
     }
 
+    private fun setUpCategoryRV(categoryTitle: String, data: List<MovieItem>){
+        mBinding.apply {
+            val adapter = MovieAdapter(context)
+            tvCategoryTitle.text = categoryTitle
+            rvCategoryItems.adapter = adapter
+            rvCategoryItems.layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            rvCategoryItems.setHasFixedSize(true);
+            rvCategoryItems.isNestedScrollingEnabled = false;
+
+            adapter.differ.submitList(data)
+            adapter.setOnItemClickListener{pos, item, cardView ->
+                onClick(pos, item, cardView)
+            }
+        }
+    }
+
+}
+
+fun List<MovieItem>.getMovies(from: Int, to: Int): List<MovieItem>{
+    val movieItems: ArrayList<MovieItem> = ArrayList()
+    this.forEachIndexed{index, item ->
+        if(index in from..to){
+            movieItems.add(item)
+        }
+    }
+
+    return movieItems
 }
