@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.model.HomeScreenData
+import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData
 import com.anatame.pickaflix.utils.Resource
@@ -217,7 +218,13 @@ class HomeFragment : Fragment() {
 
     fun setUpRecyclerView(homeScreenData: HomeScreenData){
         binding.RVHomeScreen.apply {
-            homeScreenAdapter = HomeScreenAdapter(context, this@HomeFragment, homeScreenData)
+            homeScreenAdapter = HomeScreenAdapter(
+                context,
+                this@HomeFragment,
+                homeScreenData,
+                homeViewModel.homeItemScrollStates,
+                viewLifecycleOwner
+            )
             adapter = homeScreenAdapter
             layoutManager = LinearLayoutManager(context)
 

@@ -3,11 +3,13 @@ package com.anatame.pickaflix.ui.home.category
 import android.content.Context
 import android.util.Log
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.Logger
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.model.HomeScreenData
+import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.home.adapter.MovieAdapter
@@ -21,7 +23,9 @@ class CategoryItem(
     private val context: Context,
     private val homeFragment: HomeFragment,
     private val holder: HomeScreenAdapter.CategoryViewHolder,
-    private val homeScreenData: HomeScreenData
+    private val homeScreenData: HomeScreenData,
+    private val hScrollStates: HomeScrollStates,
+    private val lifecycleOwner: LifecycleOwner
 ): ProvideCategory {
 
     private val categoryData = homeScreenData.movieItems
@@ -35,7 +39,8 @@ class CategoryItem(
         setUpCategoryRV(
             "Trending Movies",
             categoryData.getMovies(0, 23),
-            1
+            1,
+            hScrollStates.trendingScrollState
         )
     }
 
@@ -44,7 +49,8 @@ class CategoryItem(
             setUpCategoryRV(
                 "Popular Shows",
                 categoryData.getMovies(24, 47),
-                2
+                2,
+                hScrollStates.popularScrollState
             )
         }
     }
@@ -54,7 +60,8 @@ class CategoryItem(
             setUpCategoryRV(
                 "Latest Movies",
                 categoryData.getMovies(48, 71),
-                3
+                3,
+                hScrollStates.latestMoviesScrollState
             )
         }
     }
@@ -64,7 +71,8 @@ class CategoryItem(
             setUpCategoryRV(
                 "New TV Shows",
                 categoryData.getMovies(72, 95),
-                4
+                4,
+                hScrollStates.newTvShowsScrollState
             )
         }
     }
@@ -74,7 +82,8 @@ class CategoryItem(
             setUpCategoryRV(
                 "Coming Soon",
                 categoryData.getMovies(96, 120),
-                5
+                5,
+                hScrollStates.comingSoonTvScrollState
             )
         }
     }
@@ -91,7 +100,12 @@ class CategoryItem(
         homeFragment.handleWatchListLongClick(cardView, holder, data)
     }
 
-    private fun setUpCategoryRV(categoryTitle: String, data: List<MovieItem>, homePosition: Int){
+    private fun setUpCategoryRV(
+        categoryTitle: String,
+        data: List<MovieItem>,
+        homePosition: Int,
+        scrollState: MutableLiveData<Int>
+    ){
         mBinding.apply {
             val adapter = MovieAdapter(context, homePosition)
             tvCategoryTitle.text = categoryTitle
@@ -104,9 +118,15 @@ class CategoryItem(
             rvCategoryItems.setHasFixedSize(true);
             rvCategoryItems.isNestedScrollingEnabled = false;
 
+            scrollState.observe(lifecycleOwner, Observer{
+                (rvCategoryItems.layoutManager as LinearLayoutManager)
+                    .scrollToPositionWithOffset(it, 200)
+            })
+
             adapter.differ.submitList(data)
             adapter.setOnItemClickListener{pos, item, cardView ->
                 onClick(pos, item, cardView)
+                scrollState.postValue(pos)
             }
         }
     }

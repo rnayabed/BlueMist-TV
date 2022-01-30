@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anatame.pickaflix.model.HomeScreenData
+import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.MovieDao
@@ -19,6 +20,15 @@ import java.lang.Exception
 class HomeViewModel(
     val movieDao: MovieDao
 ) : ViewModel() {
+
+    val homeItemScrollStates = HomeScrollStates(
+        MutableLiveData(0),
+        MutableLiveData(0),
+        MutableLiveData(0),
+        MutableLiveData(0),
+        MutableLiveData(0),
+        MutableLiveData(0),
+    )
 
     val homeRvScrollState: MutableLiveData<Int> = MutableLiveData()
     val homeScreenData : MutableLiveData<Resource<HomeScreenData>> = MutableLiveData()

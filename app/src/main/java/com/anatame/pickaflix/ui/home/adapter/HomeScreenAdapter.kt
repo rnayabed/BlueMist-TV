@@ -3,11 +3,14 @@ package com.anatame.pickaflix.ui.home.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
 import com.anatame.pickaflix.model.HomeScreenData
+import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.category.CategoryItem
 import com.anatame.pickaflix.utils.constants.Constants.COMING_SOON
@@ -22,7 +25,9 @@ import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 class HomeScreenAdapter(
     val context: Context,
     val homeFragment: HomeFragment,
-    val homeScreenData: HomeScreenData
+    val homeScreenData: HomeScreenData,
+    val hScrollStates: HomeScrollStates,
+    val lifecycleOwner: LifecycleOwner
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewPagerViewHolder(
@@ -64,7 +69,7 @@ class HomeScreenAdapter(
 
     private fun setUpCategoryHolder(holder: CategoryViewHolder, viewType: Int) {
         val mBinding = holder.categoryItemBinding
-        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder, homeScreenData)
+        val categoryItem = CategoryItem(mBinding, context, homeFragment, holder, homeScreenData, hScrollStates, lifecycleOwner)
         when(viewType){
             WATCHLIST -> {
                 categoryItem.setUpWatchList()
