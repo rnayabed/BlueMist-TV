@@ -32,7 +32,7 @@ class DetailViewModel: ViewModel() {
 
                 serverList.postValue(Resource.Success(servers))
 
-                val vidSrc = Parser.getVidSource(servers.first().serverDataId)
+                val vidSrc = Parser.getVidSource(servers.getVidCloud().serverDataId)
                 Log.d("movieSeasons", vidSrc.toString())
                 Log.d("vidPlayerTest", "gotVideoSrc")
                 vidEmbedLink.postValue(Resource.Success(vidSrc.link))
@@ -62,7 +62,7 @@ class DetailViewModel: ViewModel() {
                 serverList.postValue(Resource.Success(servers))
                 Log.d("movieSeasons", servers.toString())
 
-                val vidSrc = Parser.getVidSource(servers[1].serverDataId)
+                val vidSrc = Parser.getVidSource(servers.getVidCloud().serverDataId)
                 Log.d("movieSeasons", vidSrc.toString())
                 Log.d("vidPlayerTest", "gotVideoSrc")
                 vidEmbedLink.postValue(Resource.Success(vidSrc.link))
@@ -75,25 +75,34 @@ class DetailViewModel: ViewModel() {
 
         }
     }
+
+    fun getEpisodes(seasonDataID: String){
+        viewModelScope.launch (Dispatchers.IO){
+            val eps = Parser.getEpisodes(seasonDataID)
+            episodeList.postValue(Resource.Success(eps))
+        }
+    }
+
     fun getSelectedEpisodeVid(episodeDataID: String){
         viewModelScope.launch (Dispatchers.IO) {
             val servers = Parser.getServers(episodeDataID)
             serverList.postValue(Resource.Success(servers))
             Log.d("movieSeasons", servers.toString())
 
-            val vidSrc = Parser.getVidSource(servers[1].serverDataId)
+
+            val vidSrc = Parser.getVidSource(servers.getVidCloud().serverDataId)
             Log.d("movieSeasons", vidSrc.toString())
             vidEmbedLink.postValue(Resource.Success(vidSrc.link))
         }
     }
 
-    fun getSelectedServerVid(serverDataId: String){
-        viewModelScope.launch (Dispatchers.IO) {
-            val vidSrc = Parser.getVidSource(serverDataId)
-            Log.d("movieSeasons", vidSrc.toString())
-            vidEmbedLink.postValue(Resource.Success(vidSrc.link))
-        }
-    }
+//    fun getSelectedServerVid(serverDataId: String){
+//        viewModelScope.launch (Dispatchers.IO) {
+//            val vidSrc = Parser.getVidSource(serverDataId)
+//            Log.d("movieSeasons", vidSrc.toString())
+//            vidEmbedLink.postValue(Resource.Success(vidSrc.link))
+//        }
+//    }
 
 
     fun getMovieDetails(movieSrc: String){
@@ -110,4 +119,15 @@ class DetailViewModel: ViewModel() {
         }
     }
 
+}
+
+fun List<ServerItem>.getVidCloud(): ServerItem{
+    lateinit var vidCloud: ServerItem
+    this.forEach{
+        if(it.serverName.contains("Vidcloud")){
+            vidCloud = it
+        }
+    }
+
+    return vidCloud
 }

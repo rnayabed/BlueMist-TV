@@ -14,8 +14,10 @@ import com.anatame.pickaflix.databinding.FragmentDetailBinding
 import com.anatame.pickaflix.ui.detail.DetailViewModel
 import com.anatame.pickaflix.ui.detail.adapter.EpisodeRVAdapter
 import com.anatame.pickaflix.ui.detail.models.EpisodeItem
+import com.anatame.pickaflix.ui.detail.models.SeasonItem
 import com.anatame.pickaflix.ui.detail.models.ServerItem
 import com.anatame.pickaflix.utils.Resource
+import okhttp3.internal.notifyAll
 
 class DetailDataHandler(
     val context: Context,
@@ -35,30 +37,44 @@ class DetailDataHandler(
             binding.loadingIcon.show()
         }
     }
-    
-    fun handleServersLoaded(response: Resource<List<ServerItem>>){
-        val spinner = binding.serverSpinner
-        val servers:List<ServerItem> = response.data!!
 
-        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-               detailHandlerListener.onServerItemSelected(p2, servers[p2])
-                detailViewModel.getSelectedServerVid(servers[p2].serverDataId)
+    fun handleSeasonsLoaded(response: Resource<List<SeasonItem>>){
+        val spinner = binding.seasonSpinner
+        val seasons = response.data!!
+
+        Log.d("SeasonsData", seasons.toString())
+
+        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(context,  android.R.layout.simple_spinner_dropdown_item,  seasons.map {
+            it.seasonName
+        })
+        spinner.adapter = dataAdapter
+
+        spinner.setOnItemSelectedListener(object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                detailViewModel.getEpisodes(seasons[position].seasonDataID)
+                Log.d("easonsData", "bruh")
+                binding.progressBar.visibility = View.VISIBLE
+                binding.loadingIcon.hide()
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
 
         })
 
-        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(context,  android.R.layout.simple_spinner_dropdown_item,  servers.map { serverItem ->
-                serverItem.serverName
-            })
-        spinner.adapter = dataAdapter
     }
 
     fun handleEpisodeLoaded(response: Resource<List<EpisodeItem>>){
+
+        binding.progressBar.visibility = View.INVISIBLE
+
         response.data?.let {
             val epAdapter = EpisodeRVAdapter(it)
             binding.rvEpisodes.apply {

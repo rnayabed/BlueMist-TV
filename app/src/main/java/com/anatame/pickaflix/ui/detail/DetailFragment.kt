@@ -108,9 +108,9 @@ class DetailFragment : Fragment() {
 
         })
 
-        detailViewModel.serverList.observe(viewLifecycleOwner, Observer { response ->
+        detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
             when(response){
-                is Resource.Success ->  dataHandler.handleServersLoaded(response)
+                is Resource.Success ->  dataHandler.handleSeasonsLoaded(response)
                 is Resource.Loading -> {
                     Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
                         .show()
@@ -139,12 +139,11 @@ class DetailFragment : Fragment() {
 
         dataHandler.addListener(object : DetailHandlerListener{
             override fun onVideoUrlLoaded(url: String) {
+                if(this@DetailFragment::vidHelper.isInitialized){
+                    vidHelper.releasePlayer()
+                }
                 streamUrl = url
                 loadPlayer(url)
-            }
-
-            override fun onServerItemSelected(pos: Int, server: ServerItem) {
-                Toast.makeText(context, pos.toString(), Toast.LENGTH_SHORT).show()
             }
         })
     }
