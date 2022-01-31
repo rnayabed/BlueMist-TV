@@ -7,5 +7,6 @@ data class HeroItem(
     val title: String,
     val Url: String,
     val length: String,
-    val rating: String
+    val rating: String,
+    val movieType: String
 ): Serializable

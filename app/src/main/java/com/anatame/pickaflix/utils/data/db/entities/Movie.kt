@@ -12,4 +12,5 @@ data class Movie(
     val source: String,
     val title: String,
     val thumbnailUrl: String,
+    val movieType: String
 ) : Serializable

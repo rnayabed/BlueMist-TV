@@ -42,14 +42,9 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private var _binding: FragmentHomeBinding? = null
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var homeScreenAdapter: HomeScreenAdapter
     private lateinit var movieDao: MovieDao
-
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,7 +52,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         setHasOptionsMenu(true)
@@ -85,8 +80,6 @@ class HomeFragment : Fragment() {
         }
 
 
-
-
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Loading -> {
@@ -110,10 +103,6 @@ class HomeFragment : Fragment() {
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     fun navigateToSearch(){
         exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
@@ -161,14 +150,15 @@ class HomeFragment : Fragment() {
             movieDao.upsert(Movie(
                 title = movieItem.title,
                 thumbnailUrl = movieItem.thumbnailUrl,
-                source = movieItem.Url
+                source = movieItem.Url,
+                movieType = movieItem.movieType
             ))
 
-            Handler(Looper.getMainLooper()).postDelayed({
+
                 //doSomethingHere()
                 homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
                 homeViewModel.updateHomeScreenData()
-                }, 300)
+
         }
 
         val directions = HomeFragmentDirections.actionNavigationHomeToDetailFragment(

@@ -40,6 +40,7 @@ class DetailFragment : Fragment() {
     private val args: DetailFragmentArgs by navArgs()
     private lateinit var vidHelper: PlayerHelper
     private lateinit var playerLoader: PlayerLoader
+    private var streamUrl = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,66 +81,18 @@ class DetailFragment : Fragment() {
         }
 
         args.heroItem?.let {
-            setUpScreen(it.thumbnailUrl)
+            setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
+            Log.d("bruh", it.movieType)
+        }
+
+        args.watchList?.let{
+            setUpScreen(it.thumbnailUrl, it.source, it.movieType)
         }
 
         args.movieItem?.let{
-            setUpScreen(it.thumbnailUrl)
-
-            detailViewModel.getMovieDetails(it.Url)
-
-            if (it.movieType == "TV") {
-                detailViewModel.getSeasons(it.Url)
-            }
-
-            if (it.movieType == "Movie") {
-                detailViewModel.getMovieData(it.Url)
-            }
-
+            setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
         }
 
-//        detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
-//            when (response) {
-//                is Resource.Success -> {
-//                    response.data?.let {
-//                        var seasonArray = it
-//                        Log.d("dude", it.map { m -> m.seasonName }.toString())
-//                        seasonSpinnerAdapter = ArrayAdapter(
-//                            requireContext(),
-//                            android.R.layout.simple_spinner_dropdown_item,
-//                            seasonArray.map { seasonItem ->
-//                                seasonItem.seasonName
-//                            }
-//                        )
-//
-//
-//
-//                        binding.seasonSpinner.adapter = seasonSpinnerAdapter
-//                        binding.seasonSpinner.setOnItemSelectedListener(object :
-//                            AdapterView.OnItemSelectedListener {
-//                            override fun onItemSelected(
-//                                parent: AdapterView<*>?,
-//                                view: View?,
-//                                position: Int,
-//                                id: Long
-//                            ) {
-//                                viewModel.getEpisodes(seasonArray[position].seasonDataID)
-//                            }
-//
-//                            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                                TODO("Not yet implemented")
-//                            }
-//
-//                        })
-//                    }
-//                }
-//
-//                is Resource.Loading -> {
-//                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        })
         detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
@@ -185,17 +138,37 @@ class DetailFragment : Fragment() {
         headlessWebViewHelper.setOnStreamUrlLoadedListener{
             Log.d("streamUrl", it)
             binding.loadingIcon.hide()
-            vidHelper = PlayerHelper(requireContext(), binding.vidPlayer)
-            playerLoader = vidHelper.initPlayer()
-            playerLoader.loadVideoandPlay(it)
+            streamUrl = it
+            loadPlayer(it)
+
             binding.fullscreenBtn.visibility = View.VISIBLE
         }
     }
 
-    fun setUpScreen(thumbnail: String){
+    private fun loadPlayer(url: String) {
+        context?.let { mContext ->
+            vidHelper = PlayerHelper(mContext, binding.vidPlayer)
+            playerLoader = vidHelper.initPlayer()
+            playerLoader.loadVideoandPlay(url)
+        }
+    }
+
+    fun setUpScreen(thumbnail: String, source: String, movieType: String){
         Glide.with(this).load(thumbnail)
             .centerCrop()
             .into(binding.ivMovieThumnail)
+
+
+        detailViewModel.getMovieDetails(source)
+
+        if (movieType == "TV") {
+            detailViewModel.getSeasons(source)
+        }
+
+        if (movieType == "Movie") {
+            detailViewModel.getMovieData(source)
+        }
+
     }
 
     fun goFullScreen(){
@@ -221,23 +194,35 @@ class DetailFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        fullScreenActivity()
+       // fullScreenActivity()
     }
 
     override fun onResume() {
         super.onResume()
-        fullScreenActivity()
+       // fullScreenActivity()
+        loadPlayer(streamUrl)
     }
 
-    public override fun onPause() {
+    override fun onPause() {
         super.onPause()
-        vidHelper.releasePlayer()
+        if(this::vidHelper.isInitialized){
+            vidHelper.releasePlayer()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(this::vidHelper.isInitialized){
+            vidHelper.releasePlayer()
+        }
     }
 
 
-    public override fun onStop() {
+    override fun onStop() {
         super.onStop()
-        vidHelper.releasePlayer()
+        if(this::vidHelper.isInitialized){
+            vidHelper.stopPlayer()
+        }
     }
 
     private fun fullScreenActivity() {

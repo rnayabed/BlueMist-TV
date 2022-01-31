@@ -22,6 +22,8 @@ class PlayerHelper(
 
     fun initPlayer(): PlayerLoader{
         // playerView.useController = false
+
+
         player = ExoPlayer.Builder(context).build()
         playerView.player = player
 
@@ -53,7 +55,9 @@ class PlayerHelper(
     }
 
     fun releasePlayer(){
+        player?.stop()
         player?.release()
+        player = null
     }
 }
 

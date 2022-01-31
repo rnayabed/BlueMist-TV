@@ -306,6 +306,7 @@ object Parser {
             val detailItem = sliderItem.select(".scd-item")
             var movieDuration = ""
             var movieRating = ""
+            var movieType = ""
             detailItem.forEach { item ->
                 if(item.text().contains("Duration: ")) {
                     movieDuration = item.select("strong").text()
@@ -326,12 +327,20 @@ object Parser {
                 movieCaption: $movieCaption
             """.trimIndent())
 
+            if (movieHref.contains("tv")) {
+                movieType = "TV"
+            }
+            if (movieHref.contains("movie")) {
+                movieType = "Movie"
+            }
+
             heroItemList.add(HeroItem(
                 backgroundImageUrl,
                 movieTitle,
                 movieHref,
                 movieDuration,
-                movieRating
+                movieRating,
+                movieType
             ))
         }
 

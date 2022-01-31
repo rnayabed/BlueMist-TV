@@ -51,6 +51,7 @@ class HomeViewModel(
                 if(cache == null){
                     Log.d("HomeViewModel", "making network call, cache empty")
                     sliderData = Parser.getHeroSectionItems()
+                    Log.d("HomeViewModel", sliderData.toString())
                     movieData = Parser.getMovieList()
                     watchList =  movieDao.getAll()
 
