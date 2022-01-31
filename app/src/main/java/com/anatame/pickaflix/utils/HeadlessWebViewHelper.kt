@@ -46,6 +46,7 @@ class HeadlessWebViewHelper(
             override fun onLoadResource(view: WebView?, url: String?) {
                 super.onLoadResource(view, url)
                 if (url != null) {
+                    Log.d("headlessWeb", url)
                     if(url.endsWith("playlist.m3u8")){
                         onLoaded?.let { it(url) }
                     }

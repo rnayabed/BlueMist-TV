@@ -87,6 +87,13 @@ class DetailViewModel: ViewModel() {
         }
     }
 
+    fun getSelectedServerVid(serverDataId: String){
+        viewModelScope.launch (Dispatchers.IO) {
+            val vidSrc = Parser.getVidSource(serverDataId)
+            Log.d("movieSeasons", vidSrc.toString())
+            vidEmbedLink.postValue(Resource.Success(vidSrc.link))
+        }
+    }
 
 
     fun getMovieDetails(movieSrc: String){

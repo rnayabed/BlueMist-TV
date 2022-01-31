@@ -4,33 +4,31 @@ import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.webkit.WebView
 import android.widget.AdapterView
+import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.R
-import com.anatame.pickaflix.common.utils.HeadlessWebViewHelper
 import com.anatame.pickaflix.databinding.FragmentDetailBinding
-import com.anatame.pickaflix.ui.detail.adapter.EpisodeRVAdapter
-import com.anatame.pickaflix.ui.home.HomeViewModel
+import com.anatame.pickaflix.ui.detail.handler.DetailDataHandler
+import com.anatame.pickaflix.ui.detail.handler.DetailHandlerListener
 import com.anatame.pickaflix.utils.PlayerHelper
 import com.anatame.pickaflix.utils.PlayerLoader
 import com.anatame.pickaflix.utils.Resource
 import com.bumptech.glide.Glide
-import com.bumptech.glide.util.Util
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.util.Util.SDK_INT
 import com.google.android.material.transition.MaterialContainerTransform
+import android.widget.ArrayAdapter
+import com.anatame.pickaflix.ui.detail.models.ServerItem
+
+import java.util.ArrayList
 
 
 class DetailFragment : Fragment() {
@@ -41,6 +39,7 @@ class DetailFragment : Fragment() {
     private lateinit var vidHelper: PlayerHelper
     private lateinit var playerLoader: PlayerLoader
     private var streamUrl = ""
+    private lateinit var dataHandler: DetailDataHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +54,7 @@ class DetailFragment : Fragment() {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
+        detailViewModel = ViewModelProvider(this)[DetailViewModel::class.java]
 
         args.cvTransitionId?.let {
             ViewCompat.setTransitionName(binding.cvDetailContainer, it)
@@ -75,6 +74,18 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.loadingIcon.hide()
+        // Spinner element
+
+
+        dataHandler = context?.let {
+            DetailDataHandler(
+                it,
+                activity as MainActivity,
+                binding,
+                detailViewModel
+            )
+        }!!
+
 
         binding.fullscreenBtn.setOnClickListener {
             goFullScreen()
@@ -93,23 +104,13 @@ class DetailFragment : Fragment() {
             setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
         }
 
-        detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resource.Success -> {
-                    response.data?.let {
-                        val epAdapter = EpisodeRVAdapter(it)
-                        binding.rvEpisodes.apply {
-                            visibility = View.VISIBLE
-                            adapter = epAdapter
-                            layoutManager = LinearLayoutManager(requireContext())
-                        }
+        detailViewModel.movieDetails.observe(viewLifecycleOwner, Observer {
 
-                        epAdapter.setOnItemClickListener { position, epsID ->
-                            detailViewModel.getSelectedEpisodeVid(epsID)
-                        }
-                    }
-                }
+        })
 
+        detailViewModel.serverList.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+                is Resource.Success ->  dataHandler.handleServersLoaded(response)
                 is Resource.Loading -> {
                     Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
                         .show()
@@ -117,39 +118,44 @@ class DetailFragment : Fragment() {
             }
         })
 
-
-        detailViewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
-            when(response){
-                is Resource.Success -> {
-                    val webPlayer = (activity as MainActivity).getWebPlayer()
-                    response.data?.let { it ->
-                        getStreamUrl(webPlayer, it)
-                        binding.progressBar.visibility = View.GONE
-                        binding.loadingIcon.show()
-                    }
+        detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> dataHandler.handleEpisodeLoaded(response)
+                is Resource.Loading -> {
+                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         })
 
-    }
+        detailViewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+                is Resource.Success -> dataHandler.handleVidEmbedLinkLoaded(response)
+                is Resource.Error -> {
+                    Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
 
-    private fun getStreamUrl(webPlayer: WebView, url: String) {
-        val headlessWebViewHelper = HeadlessWebViewHelper(webPlayer, url)
-        headlessWebViewHelper.setOnStreamUrlLoadedListener{
-            Log.d("streamUrl", it)
-            binding.loadingIcon.hide()
-            streamUrl = it
-            loadPlayer(it)
+        dataHandler.addListener(object : DetailHandlerListener{
+            override fun onVideoUrlLoaded(url: String) {
+                streamUrl = url
+                loadPlayer(url)
+            }
 
-            binding.fullscreenBtn.visibility = View.VISIBLE
-        }
+            override fun onServerItemSelected(pos: Int, server: ServerItem) {
+                Toast.makeText(context, pos.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun loadPlayer(url: String) {
-        context?.let { mContext ->
-            vidHelper = PlayerHelper(mContext, binding.vidPlayer)
-            playerLoader = vidHelper.initPlayer()
-            playerLoader.loadVideoandPlay(url)
+        if(url.isNotEmpty()){
+            context?.let { mContext ->
+                vidHelper = PlayerHelper(mContext, binding.vidPlayer)
+                playerLoader = vidHelper.initPlayer()
+                playerLoader.loadVideoandPlay(url)
+            }
         }
     }
 
@@ -192,11 +198,6 @@ class DetailFragment : Fragment() {
         PlayerView.switchTargetView(playerLoader.getPlayer(), playerLoader.getPlayerView(), fullScreenPlayerView)
     }
 
-    override fun onStart() {
-        super.onStart()
-       // fullScreenActivity()
-    }
-
     override fun onResume() {
         super.onResume()
        // fullScreenActivity()
@@ -210,18 +211,20 @@ class DetailFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         if(this::vidHelper.isInitialized){
             vidHelper.releasePlayer()
         }
+
+        Log.d("onDestroyView", _binding.toString())
     }
 
 
     override fun onStop() {
         super.onStop()
         if(this::vidHelper.isInitialized){
-            vidHelper.stopPlayer()
+            vidHelper.releasePlayer()
         }
     }
 
