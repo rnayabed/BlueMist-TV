@@ -56,13 +56,16 @@ class HeadlessWebViewHelper(
                 epsPlayer.loadUrl(
                     """javascript:(function f() {
                             let myInterval = setInterval(() => {
-                            let server = document.querySelector('.server');
-                            if(server != null || server != 'undefined'){
-                        
-                                  document.querySelector('.server').addEventListener('click', function() {
-                                     Android.finish();
-                                 });
-                                   clearInterval(myInterval);
+                            let server = document.querySelectorAll('.server');
+                            if(server.length != 0){
+                    
+                            server.forEach((item)=>{
+                                item.addEventListener('click', function() {
+                                 Android.finish();
+                                });
+                            });
+                          
+                               clearInterval(myInterval);
                             }
                         }, 200);
                         
