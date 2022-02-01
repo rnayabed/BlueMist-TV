@@ -41,7 +41,12 @@ data class BlockHosts(
         "venetrigni.com",
         "cdnjs.cloudflare.com",
         "offerimage.com",
-
+        "rndskittytor.com",
+        "applive.co.in",
+        "static.cloudflareinsights.com",
+        "res.cloudinary.com",
+        "in.cmproclean.club",
+        "www.google-analytics.com",
 //    "cdn.heycdn41.xyz",
         "     cdn.trell.co",
 //        "www.gstatic.com",

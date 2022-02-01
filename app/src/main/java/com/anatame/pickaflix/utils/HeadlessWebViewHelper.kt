@@ -9,9 +9,16 @@ import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.widget.Toast
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
+import com.anatame.pickaflix.MainActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+
+
 
 @SuppressLint("SetJavaScriptEnabled")
 class HeadlessWebViewHelper(
@@ -31,6 +38,8 @@ class HeadlessWebViewHelper(
         epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
         epsPlayer.settings.databaseEnabled = true
         epsPlayer.settings.mediaPlaybackRequiresUserGesture = false
+        epsPlayer.settings.loadsImagesAutomatically = false
+        epsPlayer.settings.blockNetworkImage = true
 
         val map = HashMap<String, String>()
         map["referer"] = "https://fmovies.to"
@@ -66,6 +75,7 @@ class HeadlessWebViewHelper(
             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
                 Log.d("intercepted", request!!.url.host.toString())
                 if (BlockHosts().hosts.contains(request!!.url.host)) {
+                    Log.d("interceptedAndblocked", request!!.url.host.toString())
                     val textStream: InputStream = ByteArrayInputStream("".toByteArray())
                     return getTextWebResource(textStream)
                 }
@@ -110,7 +120,9 @@ class WebAppInterface(
     /** Show a toast from the web page  */
     @JavascriptInterface
     fun finish() {
-        Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
-        (mContext as Activity).finish()
+
+        (mContext as MainActivity).runOnUiThread {
+            Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
+        }
     }
 }
