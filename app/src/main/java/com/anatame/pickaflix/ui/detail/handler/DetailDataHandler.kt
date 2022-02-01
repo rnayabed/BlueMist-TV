@@ -29,6 +29,14 @@ class DetailDataHandler(
     private lateinit var streamUrl: String
     private lateinit var detailHandlerListener: DetailHandlerListener
 
+
+    fun handleDirectLinkLoaded(url: String){
+        val webPlayer = activity.getWebPlayer()
+        getStreamUrl(webPlayer, "https://fmovies.to$url")
+        binding.progressBar.visibility = View.GONE
+        binding.loadingIcon.show()
+    }
+
     fun handleVidEmbedLinkLoaded(response: Resource<String>){
         val webPlayer = activity.getWebPlayer()
         response.data?.let { it ->
@@ -92,7 +100,7 @@ class DetailDataHandler(
     }
 
     private fun getStreamUrl(webPlayer: WebView, url: String) {
-        val headlessWebViewHelper = HeadlessWebViewHelper(webPlayer, url)
+        val headlessWebViewHelper = HeadlessWebViewHelper(webPlayer, url, activity as Context)
         headlessWebViewHelper.setOnStreamUrlLoadedListener{
             Log.d("streamUrl", it)
             binding.loadingIcon.hide()

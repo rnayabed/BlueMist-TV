@@ -17,8 +17,8 @@ class HeadlessWebView : WebView {
     ) {
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-       requestDisallowInterceptTouchEvent(true)
-        return super.onTouchEvent(event)
-    }
+//    override fun onTouchEvent(event: MotionEvent): Boolean {
+//       requestDisallowInterceptTouchEvent(true)
+//        return super.onTouchEvent(event)
+//    }
 }

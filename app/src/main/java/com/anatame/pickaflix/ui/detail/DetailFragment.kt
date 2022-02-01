@@ -26,7 +26,9 @@ import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.transition.MaterialContainerTransform
 import android.widget.ArrayAdapter
+import com.anatame.pickaflix.common.utils.HeadlessWebViewHelper
 import com.anatame.pickaflix.ui.detail.models.ServerItem
+import com.anatame.pickaflix.utils.parser.Parser2
 
 import java.util.ArrayList
 
@@ -54,7 +56,8 @@ class DetailFragment : Fragment() {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        detailViewModel = ViewModelProvider(this)[DetailViewModel::class.java]
+        val viewModelFactory = DetailViewModelFactory(Parser2)
+        detailViewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
 
         args.cvTransitionId?.let {
             ViewCompat.setTransitionName(binding.cvDetailContainer, it)
@@ -104,29 +107,29 @@ class DetailFragment : Fragment() {
             setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
         }
 
-        detailViewModel.movieDetails.observe(viewLifecycleOwner, Observer {
-
-        })
-
-        detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
-            when(response){
-                is Resource.Success ->  dataHandler.handleSeasonsLoaded(response)
-                is Resource.Loading -> {
-                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        })
-
-        detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resource.Success -> dataHandler.handleEpisodeLoaded(response)
-                is Resource.Loading -> {
-                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        })
+//        detailViewModel.movieDetails.observe(viewLifecycleOwner, Observer {
+//
+//        })
+//
+//        detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
+//            when(response){
+//                is Resource.Success ->  dataHandler.handleSeasonsLoaded(response)
+//                is Resource.Loading -> {
+//                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            }
+//        })
+//
+//        detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
+//            when (response) {
+//                is Resource.Success -> dataHandler.handleEpisodeLoaded(response)
+//                is Resource.Loading -> {
+//                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            }
+//        })
 
         detailViewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
             when(response){
@@ -163,16 +166,21 @@ class DetailFragment : Fragment() {
             .centerCrop()
             .into(binding.ivMovieThumnail)
 
+         Log.d("logit", source)
 
-        detailViewModel.getMovieDetails(source)
+        val webPlayer = (activity as MainActivity).getWebPlayer()
+        dataHandler.handleDirectLinkLoaded(source)
 
-        if (movieType == "TV") {
-            detailViewModel.getSeasons(source)
-        }
 
-        if (movieType == "Movie") {
-            detailViewModel.getMovieData(source)
-        }
+//        detailViewModel.getMovieDetails(source)
+//
+//        if (movieType == "TV") {
+//            detailViewModel.getSeasons(source)
+//        }
+//
+//        if (movieType == "Movie") {
+//            detailViewModel.getMovieData(source)
+//        }
 
     }
 

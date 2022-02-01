@@ -1,10 +1,14 @@
 package com.anatame.pickaflix.common.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.webkit.*
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -13,7 +17,7 @@ import java.io.InputStream
 class HeadlessWebViewHelper(
     private val epsPlayer: WebView,
     private val vidEmbedURl: String,
-
+    val context: Context
 ) {
 
     private var onLoaded:((String) -> Unit)? = null
@@ -29,13 +33,38 @@ class HeadlessWebViewHelper(
         epsPlayer.settings.mediaPlaybackRequiresUserGesture = false
 
         val map = HashMap<String, String>()
-        map["referer"] = "https://fmoviesto.cc"
+        map["referer"] = "https://fmovies.to"
 
         epsPlayer.loadUrl(vidEmbedURl, map)
 
+        epsPlayer.addJavascriptInterface(
+            WebAppInterface(context), "Android")
+
         epsPlayer.webViewClient = object : WebViewClient() {
 
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                epsPlayer.loadUrl(
+                    """javascript:(function f() {
+                            let myInterval = setInterval(() => {
+                            let server = document.querySelector('.server');
+                            if(server != null || server != 'undefined'){
+                        
+                                  document.querySelector('.server').addEventListener('click', function() {
+                                     Android.finish();
+                                 });
+                                   clearInterval(myInterval);
+                            }
+                        }, 200);
+                        
+         
+          
+                      })()""".trimIndent().trimMargin()
+                );
+            }
+
             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+                Log.d("intercepted", request!!.url.host.toString())
                 if (BlockHosts().hosts.contains(request!!.url.host)) {
                     val textStream: InputStream = ByteArrayInputStream("".toByteArray())
                     return getTextWebResource(textStream)
@@ -48,6 +77,8 @@ class HeadlessWebViewHelper(
                 if (url != null) {
                     Log.d("headlessWeb", url)
                     if(url.endsWith("playlist.m3u8")){
+                        onLoaded?.let { it(url) }
+                    } else if(url.endsWith("list.m3u8")){
                         onLoaded?.let { it(url) }
                     }
                 }
@@ -69,5 +100,17 @@ class HeadlessWebViewHelper(
 
     fun setOnStreamUrlLoadedListener(listener: (String) -> Unit){
         onLoaded = listener
+    }
+}
+
+class WebAppInterface(
+    private val mContext: Context,
+) {
+
+    /** Show a toast from the web page  */
+    @JavascriptInterface
+    fun finish() {
+        Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
+        (mContext as Activity).finish()
     }
 }

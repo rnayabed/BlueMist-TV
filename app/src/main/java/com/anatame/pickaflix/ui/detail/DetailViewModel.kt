@@ -10,10 +10,13 @@ import com.anatame.pickaflix.ui.detail.models.ServerItem
 import com.anatame.pickaflix.ui.detail.models.SeasonItem
 import com.anatame.pickaflix.ui.detail.models.EpisodeItem
 import com.anatame.pickaflix.utils.parser.Parser
+import com.anatame.pickaflix.utils.parser.ParserProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DetailViewModel: ViewModel() {
+class DetailViewModel(
+    parser: ParserProvider
+): ViewModel() {
 
     val movieDetails: MutableLiveData<Resource<MovieDetails>> = MutableLiveData()
     val vidEmbedLink: MutableLiveData<Resource<String>> = MutableLiveData()

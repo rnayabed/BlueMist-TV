@@ -13,12 +13,14 @@ import com.anatame.pickaflix.utils.data.db.entities.Movie
 import com.anatame.pickaflix.utils.data.db.entities.HomeScreenCache
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.utils.parser.Parser
+import com.anatame.pickaflix.utils.parser.ParserProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class HomeViewModel(
-    val movieDao: MovieDao
+    val movieDao: MovieDao,
+    val parser: ParserProvider
 ) : ViewModel() {
 
     val homeItemScrollStates = HomeScrollStates(
@@ -50,9 +52,9 @@ class HomeViewModel(
 
                 if(cache == null){
                     Log.d("HomeViewModel", "making network call, cache empty")
-                    sliderData = Parser.getHeroSectionItems()
+                    sliderData = parser.getHeroSectionItems()
                     Log.d("HomeViewModel", sliderData.toString())
-                    movieData = Parser.getMovieList()
+                    movieData = parser.getMovieList()
                     watchList =  movieDao.getAll()
 
                     homeScreenData.postValue(Resource.Success(HomeScreenData(

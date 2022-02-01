@@ -18,13 +18,13 @@ import org.jsoup.Jsoup
 
 const val MOVIE_TAG = "movieItemList"
 
-object Parser {
-    suspend fun getVidSource(serverDataID: String): VidData {
+object Parser : ParserProvider {
+    override suspend fun getVidSource(serverDataID: String): VidData {
         val vidData = RetrofitInstance.api.getVidData("https://fmoviesto.cc/ajax/get_link/$serverDataID")
         return vidData.body()!!
     }
 
-    fun getMovieServers(movieID: String = "66669"): ArrayList<ServerItem> {
+    override suspend fun getMovieServers(movieID: String): ArrayList<ServerItem> {
         val serverList = ArrayList<ServerItem>()
 
         val doc = Jsoup.connect("https://fmoviesto.cc/ajax/movie/episodes/$movieID")
@@ -41,9 +41,9 @@ object Parser {
 
             serverList.add(
                 ServerItem(
-                serverName,
-                serverDataID
-            )
+                    serverName,
+                    serverDataID
+                )
             )
         }
 
@@ -53,7 +53,7 @@ object Parser {
 
         return serverList
     }
-    fun getServers(episodeID: String = "8328"): ArrayList<ServerItem> {
+    override suspend fun getServers(episodeID: String): ArrayList<ServerItem> {
         val serverList = ArrayList<ServerItem>()
 
         val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/episode/servers/$episodeID")
@@ -70,9 +70,9 @@ object Parser {
 
             serverList.add(
                 ServerItem(
-                serverName,
-                serverDataID
-            )
+                    serverName,
+                    serverDataID
+                )
             )
         }
 
@@ -83,7 +83,7 @@ object Parser {
         return serverList
     }
 
-    fun getEpisodes(seasonID: String): ArrayList<EpisodeItem>{
+    override suspend fun getEpisodes(seasonID: String): ArrayList<EpisodeItem>{
         val episodeList = ArrayList<EpisodeItem>()
 
         val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/season/episodes/$seasonID")
@@ -102,7 +102,7 @@ object Parser {
         return episodeList
     }
 
-    fun getSeasons(showDataID: String): ArrayList<SeasonItem>{
+    override suspend fun getSeasons(showDataID: String): ArrayList<SeasonItem>{
         val seasonList = ArrayList<SeasonItem>()
 
         Log.d("movieSeasons","called from parser")
@@ -129,7 +129,7 @@ object Parser {
 //        val movieDetails = doc.getElementById("")
 //    }
 
-    fun getMovieDetails(movieSrc: String): MovieDetails {
+    override suspend fun getMovieDetails(movieSrc: String): MovieDetails {
         lateinit var movieDetail: MovieDetails
 
         val url = "https://fmoviesto.cc${movieSrc}"
@@ -203,28 +203,28 @@ object Parser {
 
             movieDetail = MovieDetails(
                 "https://fmoviesto.cc/watch-${movieSrc}",
-                        movieTrailer,
-                        movieDataID,
-                        movieTitle,
-                        movieQuality,
-                        movieRating!!,
-                        movieLength!!,
-                        movieDescription,
-                        movieBackgroundCoverUrl,
-                        country,
-                        genre,
-                        released,
-                        production,
-                        casts
-                )
-            }
+                movieTrailer,
+                movieDataID,
+                movieTitle,
+                movieQuality,
+                movieRating!!,
+                movieLength!!,
+                movieDescription,
+                movieBackgroundCoverUrl,
+                country,
+                genre,
+                released,
+                production,
+                casts
+            )
+        }
 
         Log.d("MovieDetailsHTML", movieDetail.toString())
 
         return movieDetail
     }
 
-    fun getSearchItem(searchTerm: String): ArrayList<SearchMovieItem> {
+    override suspend fun getSearchItem(searchTerm: String): ArrayList<SearchMovieItem> {
         val searchItemList = ArrayList<SearchMovieItem>()
 
         val client = OkHttpClient()
@@ -285,7 +285,7 @@ object Parser {
 
     }
 
-    fun getHeroSectionItems() : ArrayList<HeroItem>{
+    override suspend fun getHeroSectionItems() : ArrayList<HeroItem>{
         val heroItemList = ArrayList<HeroItem>()
 
         val doc = Jsoup.connect(MOVIE_URL)
@@ -347,7 +347,7 @@ object Parser {
         return heroItemList
     }
 
-    fun getMovieList(page: Int = 0): ArrayList<MovieItem> {
+    override suspend fun getMovieList(page: Int): ArrayList<MovieItem> {
         var movieItemListData = ArrayList<MovieItem>()
         val doc = Jsoup.connect(MOVIE_URL)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
@@ -408,8 +408,8 @@ object Parser {
                 Url = movieHref,
                 releaseDate = movieReleaseDate!!,
                 length = movieLength,
-                quality = movieQuality,
-                movieType = movieType
+                movieType = movieType,
+                quality = ""
             )
 
             movieItemListData.add(movieItemData)
@@ -489,3 +489,4 @@ fun String.getBackgroundImageUrl(): String{
         this.indexOf(')')
     )
 }
+

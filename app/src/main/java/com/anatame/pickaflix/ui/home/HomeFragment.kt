@@ -34,6 +34,7 @@ import com.anatame.pickaflix.utils.data.db.MovieDatabase
 import com.anatame.pickaflix.utils.data.db.entities.Movie
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
+import com.anatame.pickaflix.utils.parser.Parser2
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +66,7 @@ class HomeFragment : Fragment() {
         view.doOnPreDraw { startPostponedEnterTransition() }
 
         movieDao = context?.let { MovieDatabase.invoke(it).getMovieDao() }!!
-        val viewModelProviderFactory = HomeViewModelFactory(movieDao)
+        val viewModelProviderFactory = HomeViewModelFactory(movieDao, Parser2)
         homeViewModel = ViewModelProvider(this, viewModelProviderFactory).get(HomeViewModel::class.java)
 
         homeViewModel.setFirstInit()
