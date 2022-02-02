@@ -1,7 +1,6 @@
 package com.anatame.pickaflix.common.utils
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -9,12 +8,7 @@ import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.widget.Toast
-import androidx.annotation.UiThread
-import androidx.lifecycle.MutableLiveData
 import com.anatame.pickaflix.MainActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
@@ -23,16 +17,22 @@ import java.io.InputStream
 @SuppressLint("SetJavaScriptEnabled")
 class HeadlessWebViewHelper(
     private val epsPlayer: WebView,
-    private val vidEmbedURl: String,
     val context: Context
 ) {
 
     private var onLoaded:((String) -> Unit)? = null
+    private var map: HashMap<String, String> = HashMap<String, String>()
 
     init {
+        map["referer"] = "https://fmovies.to"
+        Log.d("webviewInit", "initialized")
+    }
+
+    fun initView() : Instance{
+        Log.d("webviewInit", "initialized")
         webViewLayerType()
         epsPlayer.settings.userAgentString =
-            "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
+            "Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion"
         epsPlayer.settings.javaScriptEnabled = true
         epsPlayer.settings.domStorageEnabled = true
         epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
@@ -41,10 +41,6 @@ class HeadlessWebViewHelper(
         epsPlayer.settings.loadsImagesAutomatically = false
         epsPlayer.settings.blockNetworkImage = true
 
-        val map = HashMap<String, String>()
-        map["referer"] = "https://fmovies.to"
-
-        epsPlayer.loadUrl(vidEmbedURl, map)
 
         epsPlayer.addJavascriptInterface(
             WebAppInterface(context), "Android")
@@ -69,7 +65,17 @@ class HeadlessWebViewHelper(
                             }
                         }, 200);
                         
-         
+                         let playInterval = setInterval(() => {
+                            let play = document.querySelector("iframe");
+                            if(play != null || play != 'undefined'){
+                               Android.finish();
+                              play.click();
+                                play.click();
+                                  play.click();
+                                   Android.finish();
+                               clearInterval(playInterval);
+                            }
+                        }, 200);
           
                       })()""".trimIndent().trimMargin()
                 );
@@ -81,7 +87,10 @@ class HeadlessWebViewHelper(
                     Log.d("interceptedAndblocked", request!!.url.host.toString())
                     val textStream: InputStream = ByteArrayInputStream("".toByteArray())
                     return getTextWebResource(textStream)
+                } else{
+                    Log.d("AndNotblocked", request!!.url.host.toString())
                 }
+
                 return super.shouldInterceptRequest(view, request)
             }
 
@@ -93,9 +102,27 @@ class HeadlessWebViewHelper(
                         onLoaded?.let { it(url) }
                     } else if(url.endsWith("list.m3u8")){
                         onLoaded?.let { it(url) }
+                        epsPlayer.settings.javaScriptEnabled = false
+                        epsPlayer.reload()
                     }
                 }
             }
+        }
+
+
+        return Instance()
+
+    }
+
+    inner class Instance(){
+
+        fun loadUrl(link: String, javascriptEnabled: Boolean = true){
+            epsPlayer.settings.javaScriptEnabled = javascriptEnabled
+            epsPlayer.loadUrl(link, map)
+        }
+
+        fun setOnStreamUrlLoadedListener(listener: (String) -> Unit){
+            onLoaded = listener
         }
     }
 
@@ -110,15 +137,19 @@ class HeadlessWebViewHelper(
             epsPlayer.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
     }
-
-    fun setOnStreamUrlLoadedListener(listener: (String) -> Unit){
-        onLoaded = listener
-    }
 }
 
 class WebAppInterface(
     private val mContext: Context,
 ) {
+
+    @JavascriptInterface
+    fun iframe(frame: String) {
+        Log.d("frameData", frame)
+        (mContext as MainActivity).runOnUiThread {
+
+        }
+    }
 
     /** Show a toast from the web page  */
     @JavascriptInterface

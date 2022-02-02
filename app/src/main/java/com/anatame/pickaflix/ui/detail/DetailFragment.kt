@@ -171,17 +171,6 @@ class DetailFragment : Fragment() {
         val webPlayer = (activity as MainActivity).getWebPlayer()
         dataHandler.handleDirectLinkLoaded(source)
 
-
-//        detailViewModel.getMovieDetails(source)
-//
-//        if (movieType == "TV") {
-//            detailViewModel.getSeasons(source)
-//        }
-//
-//        if (movieType == "Movie") {
-//            detailViewModel.getMovieData(source)
-//        }
-
     }
 
     fun goFullScreen(){
