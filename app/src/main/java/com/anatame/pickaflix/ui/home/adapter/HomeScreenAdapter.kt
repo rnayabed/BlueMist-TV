@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.marginLeft
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,6 +20,7 @@ import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.ViewPager.HorizontalMarginItemDecoration
 import com.anatame.pickaflix.ui.home.ViewPager.ZoomOutPageTransformer
+import com.anatame.pickaflix.ui.home.adapter.childAdapters.HeroPagerAdapter
 import com.anatame.pickaflix.ui.home.category.CategoryItem
 import com.anatame.pickaflix.utils.constants.Constants.COMING_SOON
 import com.anatame.pickaflix.utils.constants.Constants.LATEST_MOVIES

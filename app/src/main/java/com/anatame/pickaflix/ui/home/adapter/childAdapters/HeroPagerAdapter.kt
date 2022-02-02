@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.ui.home.adapter
+package com.anatame.pickaflix.ui.home.adapter.childAdapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

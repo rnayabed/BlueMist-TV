@@ -11,8 +11,8 @@ import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
-import com.anatame.pickaflix.ui.home.adapter.MovieAdapter
-import com.anatame.pickaflix.ui.home.adapter.WatchListAdapter
+import com.anatame.pickaflix.ui.home.adapter.childAdapters.MovieAdapter
+import com.anatame.pickaflix.ui.home.adapter.childAdapters.WatchListAdapter
 import com.anatame.pickaflix.utils.data.db.entities.Movie
 
 class CategoryItem(

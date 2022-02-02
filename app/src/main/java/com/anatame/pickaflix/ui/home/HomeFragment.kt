@@ -27,6 +27,9 @@ import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
+import com.anatame.pickaflix.ui.home.adapter.rework.HomeItemRepo
+import com.anatame.pickaflix.ui.home.adapter.rework.HomeScreenAdapter2
+import com.anatame.pickaflix.ui.home.adapter.rework.ViewPagerItem
 import com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.MovieDao
@@ -45,6 +48,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var binding: FragmentHomeBinding
     private lateinit var homeScreenAdapter: HomeScreenAdapter
+    private lateinit var homeScreenAdapter2: HomeScreenAdapter2
     private lateinit var movieDao: MovieDao
 
     override fun onCreateView(
@@ -209,16 +213,17 @@ class HomeFragment : Fragment() {
     }
 
     fun setUpRecyclerView(homeScreenData: HomeScreenData){
+        val repo = HomeItemRepo()
+        repo.addItem(ViewPagerItem())
+        repo.addItem(ViewPagerItem())
+
+        homeScreenAdapter2 = HomeScreenAdapter2(
+            requireContext(),
+            repo
+        )
+
         binding.RVHomeScreen.apply {
-            homeScreenAdapter = HomeScreenAdapter(
-                context,
-                this@HomeFragment,
-                homeScreenData,
-                homeViewModel.homeItemScrollStates,
-                homeViewModel.heroItemScrollState,
-                viewLifecycleOwner
-            )
-            adapter = homeScreenAdapter
+            adapter = homeScreenAdapter2
             layoutManager = LinearLayoutManager(context)
 
             homeViewModel.homeRvScrollState.observe(viewLifecycleOwner, Observer{
