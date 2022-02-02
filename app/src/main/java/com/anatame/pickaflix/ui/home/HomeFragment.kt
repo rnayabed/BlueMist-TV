@@ -1,17 +1,12 @@
 package com.anatame.pickaflix.ui.home
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.transition.Transition
-import android.transition.TransitionListenerAdapter
-import android.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -25,11 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.model.HomeScreenData
-import com.anatame.pickaflix.model.scrollstate.HomeScrollStates
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.home.adapter.rework.HomeItemRepo
 import com.anatame.pickaflix.ui.home.adapter.rework.HomeScreenAdapter2
-import com.anatame.pickaflix.ui.home.adapter.rework.ViewPagerItem
+import com.anatame.pickaflix.ui.home.adapter.rework.items.MovieCategoryItem
+import com.anatame.pickaflix.ui.home.adapter.rework.items.ViewPagerItem
 import com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.MovieDao
@@ -214,12 +209,18 @@ class HomeFragment : Fragment() {
 
     fun setUpRecyclerView(homeScreenData: HomeScreenData){
         val repo = HomeItemRepo()
-        repo.addItem(ViewPagerItem())
-        repo.addItem(ViewPagerItem())
-
+        repo.addItem(ViewPagerItem(requireContext(), homeScreenData.sliderItems))
+        repo.addItem(MovieCategoryItem(
+            requireContext(),
+            homeScreenData.movieItems,
+            "Brah",
+            "",
+            homeViewModel.homeItemScrollStates.trendingScrollState,
+        ))
         homeScreenAdapter2 = HomeScreenAdapter2(
             requireContext(),
-            repo
+            repo,
+            viewLifecycleOwner,
         )
 
         binding.RVHomeScreen.apply {

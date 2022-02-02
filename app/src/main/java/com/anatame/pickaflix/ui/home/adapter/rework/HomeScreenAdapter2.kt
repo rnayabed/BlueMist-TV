@@ -34,6 +34,7 @@ import java.lang.Math.abs
 class HomeScreenAdapter2(
     val context: Context,
     val repo: HomeItemRepo,
+    val lifecycleOwner: LifecycleOwner,
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
@@ -43,7 +44,7 @@ class HomeScreenAdapter2(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
+        repo.getItem(position).construct(position, lifecycleOwner)
     }
 
 
