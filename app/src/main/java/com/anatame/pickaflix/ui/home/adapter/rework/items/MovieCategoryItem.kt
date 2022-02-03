@@ -10,15 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
-import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
-import com.anatame.pickaflix.ui.home.adapter.childAdapters.MovieAdapter
-import com.anatame.pickaflix.ui.home.adapter.rework.HomeItemProvider
-import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
+import com.anatame.pickaflix.ui.home.adapter.rework.childAdapters.MovieAdapter
+import com.anatame.pickaflix.ui.home.adapter.rework.providers.HomeItemProvider
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
 
 
 class MovieCategoryItem(
-    val context: Context,
     val data: List<MovieItem>,
     val categoryTitle: String,
     val categorySubtitle: String,
@@ -28,19 +25,25 @@ class MovieCategoryItem(
 
     inner class Holder(
         private val binding: ItemHomeCategoryBinding
-    ): RecyclerView.ViewHolder(binding.root)
+    ): RecyclerView.ViewHolder(binding.root){
 
-    override fun getViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+    }
+
+    override fun getViewHolder(context: Context, parent: ViewGroup, lifecycleOwner: LifecycleOwner): RecyclerView.ViewHolder {
         binding = ItemHomeCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return Holder(binding)
+        val holder = Holder(binding)
+        val position = holder.absoluteAdapterPosition
+
+        setUpCategoryRV(context, position, lifecycleOwner)
+
+        return holder
     }
 
-    override fun construct(position: Int, lifecycleOwner: LifecycleOwner) {
+    override fun onBindHolder(context: Context, position: Int, lifecycleOwner: LifecycleOwner) {
         Log.d("fromViewPagerItem", data.toString())
-        setUpCategoryRV(position, lifecycleOwner)
     }
 
-   private fun setUpCategoryRV(position: Int, lifecycleOwner: LifecycleOwner){
+   private fun setUpCategoryRV(context: Context, position: Int, lifecycleOwner: LifecycleOwner){
         binding.apply {
             val adapter = MovieAdapter(context, position)
             tvCategoryTitle.text = categoryTitle

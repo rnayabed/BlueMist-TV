@@ -1,7 +1,6 @@
 package com.anatame.pickaflix.ui.home.adapter.rework
 
-import androidx.recyclerview.widget.RecyclerView
-import com.anatame.pickaflix.utils.Resource
+import com.anatame.pickaflix.ui.home.adapter.rework.providers.HomeItemProvider
 
 class HomeItemRepo {
     private val items: ArrayList<HomeItemProvider> = ArrayList()
@@ -10,7 +9,7 @@ class HomeItemRepo {
         items.add(item)
     }
 
-    fun getItem(p: Int): HomeItemProvider{
+    fun getItem(p: Int): HomeItemProvider {
         return items[p]
     }
 

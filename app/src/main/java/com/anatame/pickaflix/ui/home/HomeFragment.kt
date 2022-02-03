@@ -23,8 +23,7 @@ import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.home.adapter.rework.HomeItemRepo
 import com.anatame.pickaflix.ui.home.adapter.rework.HomeScreenAdapter2
-import com.anatame.pickaflix.ui.home.adapter.rework.items.MovieCategoryItem
-import com.anatame.pickaflix.ui.home.adapter.rework.items.ViewPagerItem
+import com.anatame.pickaflix.ui.home.adapter.rework.data.HomeScreenItemData
 import com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.MovieDao
@@ -104,6 +103,62 @@ class HomeFragment : Fragment() {
     }
 
 
+
+    fun setUpRecyclerView(homeScreenData: HomeScreenData){
+        val repo = HomeItemRepo()
+        setUpRVItemData(repo, homeScreenData)
+
+        homeScreenAdapter2 = HomeScreenAdapter2(
+            requireContext(),
+            repo,
+            viewLifecycleOwner,
+        )
+
+        binding.RVHomeScreen.apply {
+            adapter = homeScreenAdapter2
+            layoutManager = LinearLayoutManager(context)
+
+            homeViewModel.homeRvScrollState.observe(viewLifecycleOwner, Observer{
+                (binding.RVHomeScreen.layoutManager as LinearLayoutManager)
+                    .scrollToPositionWithOffset(it, 200)
+            })
+        }
+    }
+
+    private fun setUpRVItemData(
+        repo: HomeItemRepo,
+        homeScreenData: HomeScreenData
+    ) {
+        HomeScreenItemData(homeScreenData, homeViewModel).repoData.forEach{
+            repo.addItem(it)
+        }
+    }
+
+
+    fun handleWatchListLongClick(cardView: CardView, holder: HomeScreenAdapter.CategoryViewHolder, data: Movie) {
+        val destination = HomeFragmentDirections.actionNavigationHomeToHomeListDialogFragment(
+            HomeBottomSheetData(
+                this@HomeFragment,
+                data
+            )
+        )
+        findNavController().navigate(destination)
+        Handler(Looper.getMainLooper()).postDelayed({
+            //doSomethingHere()
+            homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
+        }, 300)
+    }
+
+    fun removeFromWatchList(movie: Movie) {
+        lifecycleScope.launch(Dispatchers.IO){
+            movieDao.deleteMovieFromWatchList(movie)
+            homeViewModel.updateHomeScreenData()
+        }
+    }
+
+
+    // Navigation methods
+
     fun navigateToSearch(){
         exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
             duration = 300
@@ -155,9 +210,9 @@ class HomeFragment : Fragment() {
             ))
 
 
-                //doSomethingHere()
-                homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
-                homeViewModel.updateHomeScreenData()
+            //doSomethingHere()
+            homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
+            homeViewModel.updateHomeScreenData()
 
         }
 
@@ -207,52 +262,5 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun setUpRecyclerView(homeScreenData: HomeScreenData){
-        val repo = HomeItemRepo()
-        repo.addItem(ViewPagerItem(requireContext(), homeScreenData.sliderItems))
-        repo.addItem(MovieCategoryItem(
-            requireContext(),
-            homeScreenData.movieItems,
-            "Brah",
-            "",
-            homeViewModel.homeItemScrollStates.trendingScrollState,
-        ))
-        homeScreenAdapter2 = HomeScreenAdapter2(
-            requireContext(),
-            repo,
-            viewLifecycleOwner,
-        )
-
-        binding.RVHomeScreen.apply {
-            adapter = homeScreenAdapter2
-            layoutManager = LinearLayoutManager(context)
-
-            homeViewModel.homeRvScrollState.observe(viewLifecycleOwner, Observer{
-                (binding.RVHomeScreen.layoutManager as LinearLayoutManager)
-                    .scrollToPositionWithOffset(it, 200)
-            })
-        }
-    }
-
-    fun handleWatchListLongClick(cardView: CardView, holder: HomeScreenAdapter.CategoryViewHolder, data: Movie) {
-        val destination = HomeFragmentDirections.actionNavigationHomeToHomeListDialogFragment(
-            HomeBottomSheetData(
-                this@HomeFragment,
-                data
-            )
-        )
-        findNavController().navigate(destination)
-        Handler(Looper.getMainLooper()).postDelayed({
-            //doSomethingHere()
-            homeViewModel.homeRvScrollState.postValue((binding.RVHomeScreen.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition())
-        }, 300)
-    }
-
-    fun removeFromWatchList(movie: Movie) {
-        lifecycleScope.launch(Dispatchers.IO){
-            movieDao.deleteMovieFromWatchList(movie)
-            homeViewModel.updateHomeScreenData()
-        }
-    }
 
 }
