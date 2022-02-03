@@ -34,7 +34,7 @@
         android:id="@+id/hWebView"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

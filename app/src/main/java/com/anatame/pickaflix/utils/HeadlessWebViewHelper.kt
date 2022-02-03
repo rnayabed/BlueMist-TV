@@ -83,12 +83,24 @@ class HeadlessWebViewHelper(
 
             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
                 Log.d("intercepted", request!!.url.host.toString())
-                if (BlockHosts().hosts.contains(request!!.url.host)) {
+//                if (BlockHosts().hosts.contains(request!!.url.host)) {
+//                    Log.d("interceptedAndblocked", request!!.url.host.toString())
+//                    val textStream: InputStream = ByteArrayInputStream("".toByteArray())
+//                    return getTextWebResource(textStream)
+//                } else{
+//                    Log.d("AndNotblocked", request!!.url.host.toString())
+//                }
+
+                fun checkIfAllowed(host: String): Boolean{
+                    return BlockHosts().allowedHosts.contains(host) || host.contains("vidstream") ||  host.contains("mcloud")
+                }
+                
+                if(checkIfAllowed(request.url.host!!)){
+                    Log.d("AndNotblocked", request!!.url.host.toString())
+                } else {
                     Log.d("interceptedAndblocked", request!!.url.host.toString())
                     val textStream: InputStream = ByteArrayInputStream("".toByteArray())
                     return getTextWebResource(textStream)
-                } else{
-                    Log.d("AndNotblocked", request!!.url.host.toString())
                 }
 
                 return super.shouldInterceptRequest(view, request)

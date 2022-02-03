@@ -1,6 +1,20 @@
 package com.anatame.pickaflix.common.utils
 
 data class BlockHosts(
+
+    val allowedHosts: List<String> = listOf<String>(
+        "fmovies.to",
+        "cdnjs.cloudflare.com",
+        "s1.bunnycdn.ru",
+        "mcloud.to",
+        "ajax.googleapis.com",
+        "xere.mcloud.to",
+        "zdzye.vidstream.pro",
+        "vidstream.pro",
+        "emrwz.vidstream.pro",
+         "vidstream.pro"
+    ),
+
     val hosts2: List<String> = listOf<String>(
         "www.googletagmanager.com",
         "g.jwpsrv.com"
@@ -39,7 +53,16 @@ data class BlockHosts(
         "ytube2dl.com",
         "dismantlepenantiterrorist.com",
         "venetrigni.com",
-        "cdnjs.cloudflare.com",
+      //  "cdnjs.cloudflare.com",
+        "oaftaijo.net",
+        "jomtingi.net",
+        "oaftaijo.net",
+        "fmoviescomment.disqus.com",
+        "inattentivehandymanpresentiment.com",
+        "inattentivehandymanpresentiment.com",
+        "uckbcroqkb.com",
+        "fb.nxthope.com",
+        "oaftaijo.net",
         "lousebankroll.com",
         "worldfreshblog.com",
         "littlecdn.com",
@@ -72,6 +95,6 @@ data class BlockHosts(
 //        "www.gstatic.com",
         "untimburra.com",
         //      "ssl.p.jwpcdn.com",
-        "i.imgur.com",
+        "i.imgur.com"
     )
 )

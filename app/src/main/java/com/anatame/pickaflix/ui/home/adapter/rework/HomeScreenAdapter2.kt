@@ -5,17 +5,23 @@ import android.util.Log
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.anatame.pickaflix.ui.home.HomeFragment
 
 class HomeScreenAdapter2(
     val context: Context,
     val repo: HomeItemRepo,
+    val homeFragment: HomeFragment,
     val lifecycleOwner: LifecycleOwner,
 ):  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         Log.d("oncreateCalled", viewType.toString())
-        return repo.getItem(viewType).getViewHolder(context, parent, lifecycleOwner)
+        return repo.getItem(viewType).getViewHolder(
+            context,
+            parent,
+            lifecycleOwner,
+            homeFragment)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

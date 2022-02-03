@@ -107,29 +107,6 @@ class DetailFragment : Fragment() {
             setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
         }
 
-//        detailViewModel.movieDetails.observe(viewLifecycleOwner, Observer {
-//
-//        })
-//
-//        detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
-//            when(response){
-//                is Resource.Success ->  dataHandler.handleSeasonsLoaded(response)
-//                is Resource.Loading -> {
-//                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        })
-//
-//        detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
-//            when (response) {
-//                is Resource.Success -> dataHandler.handleEpisodeLoaded(response)
-//                is Resource.Loading -> {
-//                    Toast.makeText(activity, "Loading", Toast.LENGTH_SHORT)
-//                        .show()
-//                }
-//            }
-//        })
 
         detailViewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
             when(response){

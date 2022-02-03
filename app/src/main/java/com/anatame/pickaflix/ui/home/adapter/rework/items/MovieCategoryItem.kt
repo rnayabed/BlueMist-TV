@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.databinding.ItemHomeCategoryBinding
+import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.rework.childAdapters.MovieAdapter
 import com.anatame.pickaflix.ui.home.adapter.rework.providers.HomeItemProvider
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
@@ -22,6 +23,8 @@ class MovieCategoryItem(
     val scrollState: MutableLiveData<Int>,
 ): HomeItemProvider {
     private lateinit var binding: ItemHomeCategoryBinding
+    private lateinit var homeFragment: HomeFragment
+    private lateinit var holder: Holder
 
     inner class Holder(
         private val binding: ItemHomeCategoryBinding
@@ -29,10 +32,11 @@ class MovieCategoryItem(
 
     }
 
-    override fun getViewHolder(context: Context, parent: ViewGroup, lifecycleOwner: LifecycleOwner): RecyclerView.ViewHolder {
+    override fun getViewHolder(context: Context, parent: ViewGroup, lifecycleOwner: LifecycleOwner, homeFragment: HomeFragment): RecyclerView.ViewHolder {
         binding = ItemHomeCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val holder = Holder(binding)
+        holder = Holder(binding)
         val position = holder.absoluteAdapterPosition
+        this.homeFragment = homeFragment
 
         setUpCategoryRV(context, position, lifecycleOwner)
 
@@ -63,7 +67,11 @@ class MovieCategoryItem(
 
             adapter.differ.submitList(data)
             adapter.setOnItemClickListener{pos, item, cardView ->
-           //     onClick(pos, item, cardView)
+                homeFragment.navigateToDetailFromCategory(
+                    cardView,
+                    holder,
+                    item
+                )
                 scrollState.postValue(pos)
             }
         }

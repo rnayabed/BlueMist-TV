@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.databinding.ItemHomeViewpagerBinding
+import com.anatame.pickaflix.ui.home.HomeFragment
 import com.anatame.pickaflix.ui.home.adapter.rework.providers.HomeItemProvider
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 
@@ -18,7 +19,7 @@ class ViewPagerItem(
         pagerBinding: ItemHomeViewpagerBinding
     ): RecyclerView.ViewHolder(pagerBinding.root)
 
-    override fun getViewHolder(context: Context, parent: ViewGroup, lifecycleOwner: LifecycleOwner): RecyclerView.ViewHolder {
+    override fun getViewHolder(context: Context, parent: ViewGroup, lifecycleOwner: LifecycleOwner, homeFragment: HomeFragment): RecyclerView.ViewHolder {
         return Holder(ItemHomeViewpagerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 

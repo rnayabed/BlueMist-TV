@@ -24,6 +24,7 @@ import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
 import com.anatame.pickaflix.ui.home.adapter.rework.HomeItemRepo
 import com.anatame.pickaflix.ui.home.adapter.rework.HomeScreenAdapter2
 import com.anatame.pickaflix.ui.home.adapter.rework.data.HomeScreenItemData
+import com.anatame.pickaflix.ui.home.adapter.rework.items.MovieCategoryItem
 import com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.MovieDao
@@ -111,6 +112,7 @@ class HomeFragment : Fragment() {
         homeScreenAdapter2 = HomeScreenAdapter2(
             requireContext(),
             repo,
+            this@HomeFragment,
             viewLifecycleOwner,
         )
 
@@ -196,7 +198,7 @@ class HomeFragment : Fragment() {
 
     fun navigateToDetailFromCategory(
         cardView: CardView,
-        holder: HomeScreenAdapter.CategoryViewHolder,
+        holder: MovieCategoryItem.Holder,
         movieItem: MovieItem
     ) {
         homeTransition()
