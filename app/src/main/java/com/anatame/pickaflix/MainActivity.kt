@@ -1,6 +1,7 @@
 package com.anatame.pickaflix
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -41,5 +42,13 @@ class MainActivity : AppCompatActivity() {
 
     fun getWebPlayer(): HeadlessWebViewHelper.Instance {
         return headlessWebViewHelperInstance
+    }
+
+    fun showWebView() {
+        if(binding.hWebView.visibility == View.VISIBLE){
+            binding.hWebView.visibility = View.INVISIBLE
+        } else {
+            binding.hWebView.visibility = View.VISIBLE
+        }
     }
 }

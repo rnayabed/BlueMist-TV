@@ -164,27 +164,27 @@ class CategoryItem(
 //    }
 //
     private fun setUpWatchList(categoryTitle: String, data: List<Movie>){
-        mBinding.apply {
-            val adapter = WatchListAdapter(context)
-            tvCategoryTitle.text = categoryTitle
-            rvCategoryItems.adapter = adapter
-            rvCategoryItems.layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            rvCategoryItems.setHasFixedSize(true);
-            rvCategoryItems.isNestedScrollingEnabled = false;
-
-            adapter.differ.submitList(data)
-            adapter.setOnItemClickListener{pos, item, cardView ->
-                onClickWatchList(pos, item, cardView)
-            }
-
-            adapter.setOnItemLongClickListener{pos, item, cardView ->
-                onLongClickWatchList(pos, item, cardView)
-            }
-        }
+//        mBinding.apply {
+//            val adapter = WatchListAdapter(context)
+//            tvCategoryTitle.text = categoryTitle
+//            rvCategoryItems.adapter = adapter
+//            rvCategoryItems.layoutManager = LinearLayoutManager(
+//                context,
+//                LinearLayoutManager.HORIZONTAL,
+//                false
+//            )
+//            rvCategoryItems.setHasFixedSize(true);
+//            rvCategoryItems.isNestedScrollingEnabled = false;
+//
+//            adapter.differ.submitList(data)
+//            adapter.setOnItemClickListener{pos, item, cardView ->
+//                onClickWatchList(pos, item, cardView)
+//            }
+//
+//            adapter.setOnItemLongClickListener{pos, item, cardView ->
+//                onLongClickWatchList(pos, item, cardView)
+//            }
+//        }
     }
 
 }

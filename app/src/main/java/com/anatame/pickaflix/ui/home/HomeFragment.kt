@@ -25,6 +25,7 @@ import com.anatame.pickaflix.ui.home.adapter.rework.HomeItemRepo
 import com.anatame.pickaflix.ui.home.adapter.rework.HomeScreenAdapter2
 import com.anatame.pickaflix.ui.home.adapter.rework.data.HomeScreenItemData
 import com.anatame.pickaflix.ui.home.adapter.rework.items.MovieCategoryItem
+import com.anatame.pickaflix.ui.home.adapter.rework.items.WatchListItem
 import com.anatame.pickaflix.ui.views.bottomsheets.HomeBottomSheetData
 import com.anatame.pickaflix.utils.Resource
 import com.anatame.pickaflix.utils.data.db.MovieDao
@@ -235,7 +236,7 @@ class HomeFragment : Fragment() {
 
     fun navigateToDetailFromWatchList(
         cardView: CardView,
-        holder: HomeScreenAdapter.CategoryViewHolder,
+        holder: WatchListItem.Holder,
         movie: Movie
     ) {
         homeTransition()

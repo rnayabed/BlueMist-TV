@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.databinding.FragmentSettingsBinding
 
 
@@ -24,6 +25,11 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         // Inflate the layout for this fragment
+
+        binding.debug.setOnClickListener {
+            (requireActivity() as MainActivity).showWebView()
+        }
+
         return root
     }
 }

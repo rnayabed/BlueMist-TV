@@ -9,14 +9,16 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.anatame.pickaflix.databinding.ItemHomeCategoryRvItemBinding
+import com.anatame.pickaflix.databinding.ItemHomeWatchlistRvItemBinding
 import com.anatame.pickaflix.utils.data.db.entities.Movie
 import com.bumptech.glide.Glide
 
 class WatchListAdapter(
-    val context: Context
+    val context: Context,
+    val homePosition: Int
 ) : RecyclerView.Adapter<WatchListAdapter.MovieItemViewHolder>() {
 
-    inner class MovieItemViewHolder(val binding: ItemHomeCategoryRvItemBinding) :
+    inner class MovieItemViewHolder(val binding: ItemHomeWatchlistRvItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     private val differCallback = object : DiffUtil.ItemCallback<Movie>() {
@@ -32,7 +34,7 @@ class WatchListAdapter(
     val differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieItemViewHolder {
-        val binding = ItemHomeCategoryRvItemBinding.inflate(
+        val binding = ItemHomeWatchlistRvItemBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -55,7 +57,7 @@ class WatchListAdapter(
             holder.binding.apply {
                 ViewCompat.setTransitionName(
                     cvCardContainer,
-                    "iv$position ${movie.source}"
+                    "iv${position}${homePosition}${movie.source}"
                 )
 
                 Glide.with(context)

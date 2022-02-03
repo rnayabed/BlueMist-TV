@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 data class HomeScrollStates (
+    val scrollStateViewPager:  MutableLiveData<Int>,
+    val scrollStateWatchList : MutableLiveData<Int>,
     val scrollState1 : MutableLiveData<Int>,
     val scrollState2 : MutableLiveData<Int>,
     val scrollState3 : MutableLiveData<Int>,
