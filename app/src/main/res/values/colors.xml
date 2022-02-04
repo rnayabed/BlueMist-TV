@@ -14,5 +14,6 @@
     <color name="ToolbarIconColor">#9aa0a6</color>
     <color name="StatusBarColor">#1F1F1F</color>
     <color name="BackgroundDark">#121212</color>
+    <color name="UnselectedIconColor">#626262</color>
 
 </resources>

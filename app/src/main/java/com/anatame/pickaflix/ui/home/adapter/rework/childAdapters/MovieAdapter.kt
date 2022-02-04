@@ -63,11 +63,14 @@ class MovieAdapter(
                     .load(movieItem.thumbnailUrl)
                     .dontTransform()
                     .into(ivThumbnail)
+
+                cvCardContainer.setOnClickListener {
+                        view ->
+                    onItemClickListener?.let { it(position, movieItem, cvCardContainer) }
+                }
             }
 
-            setOnClickListener { view ->
-                   onItemClickListener?.let { it(position, movieItem, holder.binding.cvCardContainer) }
-            }
+
         }
     }
 
