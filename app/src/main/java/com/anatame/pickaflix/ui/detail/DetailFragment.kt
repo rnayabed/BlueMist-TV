@@ -35,9 +35,7 @@ import java.util.ArrayList
 import android.view.View
 import android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 import android.view.WindowManager
-
-
-
+import androidx.compose.ui.platform.ViewCompositionStrategy
 
 
 class DetailFragment : Fragment() {
@@ -181,13 +179,13 @@ class DetailFragment : Fragment() {
         //
         if (movieType == "TV") {
             detailViewModel.getSeasons(source)
-            binding.clTvControls.visibility = View.VISIBLE
+           // binding.clTvControls.visibility = View.VISIBLE
 
         }
 
         if (movieType == "Movie") {
             detailViewModel.getMovieData(source)
-            binding.clMovieControls.visibility = View.VISIBLE
+           // binding.clMovieControls.visibility = View.VISIBLE
         }
          Log.d("logit", source)
 

@@ -3,22 +3,21 @@ package com.anatame.pickaflix.ui.detail.handler
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.webkit.WebView
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anatame.pickaflix.MainActivity
-import com.anatame.pickaflix.common.utils.HeadlessWebViewHelper
 import com.anatame.pickaflix.databinding.FragmentDetailBinding
 import com.anatame.pickaflix.ui.detail.DetailViewModel
-import com.anatame.pickaflix.ui.detail.adapter.EpisodeRVAdapter
+import com.anatame.pickaflix.ui.detail.adapter.childAdapter.EpisodeRVAdapter
 import com.anatame.pickaflix.ui.detail.models.EpisodeItem
 import com.anatame.pickaflix.ui.detail.models.MovieDetails
 import com.anatame.pickaflix.ui.detail.models.SeasonItem
-import com.anatame.pickaflix.ui.detail.models.ServerItem
 import com.anatame.pickaflix.utils.Resource
-import okhttp3.internal.notifyAll
 
 class DetailDataHandler(
     val context: Context,
@@ -35,6 +34,25 @@ class DetailDataHandler(
             binding.tvMovieTitle.text =  it.movieTitle
         }
 
+        binding.composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+
+                Text(text = "FromComposeView")
+            }
+        }
+
+    }
+
+    @Composable
+    fun EpisodeView(
+        episodeName: String
+    ) {
+        Button(
+            onClick = { /*TODO*/ }
+        ) {
+            Text(text = "$episodeName")
+        }
     }
 
     fun handleSeasonsLoaded(response: Resource<List<SeasonItem>>){
