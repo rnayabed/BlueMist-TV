@@ -1,6 +1,7 @@
 package com.anatame.pickaflix.ui.detail
 
 import android.util.Log
+import androidx.compose.runtime.remember
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,6 +24,7 @@ class DetailViewModel(
     val seasonList: MutableLiveData<Resource<List<SeasonItem>>> = MutableLiveData()
     val episodeList: MutableLiveData<Resource<List<EpisodeItem>>> = MutableLiveData()
 
+    val selectedEps = MutableLiveData(0)
 
     fun getMovieData(url: String){
         val movieDataID: String = url.substring(url.lastIndexOf("-") + 1, (url.length))

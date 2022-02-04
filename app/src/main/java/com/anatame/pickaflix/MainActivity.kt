@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         headlessWebViewHelper = HeadlessWebViewHelper(binding.hWebView, this)
         headlessWebViewHelperInstance = headlessWebViewHelper.initView()
-        // headlessWebViewHelperInstance.loadUrl("https://fmovies.to/movie/eternals-5wwrq/1-full", false)
+        headlessWebViewHelperInstance.loadUrl("https://google.com", false)
     }
 
     fun getWebPlayer(): HeadlessWebViewHelper.Instance {
@@ -49,6 +49,18 @@ class MainActivity : AppCompatActivity() {
             binding.hWebView.visibility = View.INVISIBLE
         } else {
             binding.hWebView.visibility = View.VISIBLE
+        }
+    }
+
+    fun showBottomNav(){
+        if(this::binding.isInitialized) {
+            binding.navView.visibility = View.VISIBLE
+        }
+    }
+
+    fun hideBottomNav(){
+        if(this::binding.isInitialized) {
+            binding.navView.visibility = View.GONE
         }
     }
 }

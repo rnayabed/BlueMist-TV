@@ -17,6 +17,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
@@ -54,6 +55,8 @@ class HomeFragment : Fragment() {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        (requireActivity() as MainActivity).showBottomNav()
 
         setHasOptionsMenu(true)
         return root

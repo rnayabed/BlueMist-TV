@@ -51,6 +51,7 @@ class DetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (requireActivity() as MainActivity).hideBottomNav()
     }
 
     override fun onCreateView(
@@ -88,12 +89,15 @@ class DetailFragment : Fragment() {
 
         dataHandler = context?.let {
             DetailDataHandler(
+                viewLifecycleOwner,
                 it,
                 activity as MainActivity,
                 binding,
                 detailViewModel
             )
         }!!
+
+        dataHandler.initCompose()
 
 
         binding.fullscreenBtn.setOnClickListener {
