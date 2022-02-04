@@ -37,6 +37,8 @@ class HeadlessWebViewHelper(
         epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
         epsPlayer.settings.databaseEnabled = true
         epsPlayer.settings.mediaPlaybackRequiresUserGesture = false
+        epsPlayer.settings.loadsImagesAutomatically = false
+        epsPlayer.settings.blockNetworkImage = true
 
         epsPlayer.webViewClient = object : WebViewClient() {
 
@@ -54,6 +56,7 @@ class HeadlessWebViewHelper(
                     if(url.endsWith("playlist.m3u8")){
                         Log.d("streamUrlgg", url)
                         onLoaded?.let { it(url) }
+                        epsPlayer.settings.mediaPlaybackRequiresUserGesture = true
                     }
                 }
             }
@@ -68,6 +71,7 @@ class HeadlessWebViewHelper(
         fun loadUrl(link: String, javascriptEnabled: Boolean = true){
             Log.d("webviewcalled", link)
             epsPlayer.settings.javaScriptEnabled = javascriptEnabled
+            epsPlayer.settings.mediaPlaybackRequiresUserGesture = false
             epsPlayer.loadUrl(link, map)
         }
 

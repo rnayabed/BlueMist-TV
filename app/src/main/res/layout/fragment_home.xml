@@ -20,24 +20,26 @@
             android:layout_width="match_parent"
             app:liftOnScroll="true"
             app:statusBarForeground="@color/BackgroundDark"
-            android:backgroundTint="@color/BackgroundDark"
             android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:background="@color/BackgroundDark"
+                android:backgroundTint="@color/BackgroundDark"
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="@android:color/transparent"
                 app:expandedTitleMarginEnd="64dp"
                 app:expandedTitleMarginStart="48dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
 
                 <androidx.cardview.widget.CardView
-                    app:cardCornerRadius="8dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="6dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/searchview_background"
@@ -49,6 +51,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:textColor="@color/ToolbarIconColor"
                             android:textStyle="normal"
                             android:textSize="16sp"
                             android:layout_marginStart="16dp"

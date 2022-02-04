@@ -183,13 +183,13 @@ class DetailFragment : Fragment() {
         //
         if (movieType == "TV") {
             detailViewModel.getSeasons(source)
-           // binding.clTvControls.visibility = View.VISIBLE
+            binding.clTvControls.visibility = View.VISIBLE
 
         }
 
         if (movieType == "Movie") {
             detailViewModel.getMovieData(source)
-           // binding.clMovieControls.visibility = View.VISIBLE
+            binding.clMovieControls.visibility = View.VISIBLE
         }
          Log.d("logit", source)
 

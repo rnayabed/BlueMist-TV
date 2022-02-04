@@ -18,15 +18,6 @@ class HomeScreenItemData(
 
     init{
 
-        repoData.add(ViewPagerItem(homeScreenData.sliderItems))
-        repoData.add(
-            WatchListItem(
-                homeScreenData.watchList,
-                "Watchlist",
-                "Continue Watching",
-                homeViewModel.homeItemScrollStates.scrollStateWatchList,
-            )
-        )
         repoData.add(
             MovieCategoryItem(
                 homeScreenData.movieItems.getMovies(0, 23),
@@ -35,6 +26,16 @@ class HomeScreenItemData(
                 homeViewModel.homeItemScrollStates.scrollState1,
             )
         )
+
+        repoData.add(
+            WatchListItem(
+                homeScreenData.watchList,
+                "Watchlist",
+                "Continue Watching",
+                homeViewModel.homeItemScrollStates.scrollStateWatchList,
+            )
+        )
+
         repoData.add(
             MovieCategoryItem(
                 homeScreenData.movieItems.getMovies(24, 47),

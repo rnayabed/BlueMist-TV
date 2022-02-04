@@ -7,9 +7,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -18,6 +21,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +33,8 @@ import com.anatame.pickaflix.ui.detail.models.EpisodeItem
 import com.anatame.pickaflix.ui.detail.models.MovieDetails
 import com.anatame.pickaflix.ui.detail.models.SeasonItem
 import com.anatame.pickaflix.utils.Resource
+import com.anatame.pickaflix.utils.compose.ui.Primary
+import com.anatame.pickaflix.utils.compose.ui.PrimaryVariant
 
 class DetailDataHandler(
     val lifecycleOwner: LifecycleOwner,
@@ -63,6 +70,7 @@ class DetailDataHandler(
 
                 LazyColumn(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .fillMaxSize(),
                 ) {
                     itemsIndexed(episodeStateList.value){index, item ->
@@ -70,25 +78,6 @@ class DetailDataHandler(
                             EpisodeView(selectedItem, index, item.title, item.episodeDataID)
                         }
                     }
-
-                    itemsIndexed(episodeStateList.value){index, item ->
-                        if(item.title.isNotEmpty()){
-                            EpisodeView(selectedItem, index, item.title, item.episodeDataID)
-                        }
-                    }
-
-                    itemsIndexed(episodeStateList.value){index, item ->
-                        if(item.title.isNotEmpty()){
-                            EpisodeView(selectedItem, index, item.title, item.episodeDataID)
-                        }
-                    }
-
-                    itemsIndexed(episodeStateList.value){index, item ->
-                        if(item.title.isNotEmpty()){
-                            EpisodeView(selectedItem, index, item.title, item.episodeDataID)
-                        }
-                    }
-
 
                     movieDetails.value?.let{
                         item {
@@ -131,8 +120,12 @@ class DetailDataHandler(
         val selected = remember { mutableStateOf(false) }
 
         Button(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(12),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = if (id == selectedIndex.value) Color.Blue else Color.Gray),
+                backgroundColor = if (id == selectedIndex.value) Primary else Color.DarkGray),
             onClick = {
                 detailViewModel.selectedEps.postValue(id)
                 Log.d("fromComposeEps", episodeName)
@@ -141,7 +134,10 @@ class DetailDataHandler(
                 binding.loadingIcon.hide()
             }
         ) {
-            Text(text = "$episodeName")
+            Text(
+                text = "$episodeName",
+                color = Color.White
+            )
         }
     }
 
