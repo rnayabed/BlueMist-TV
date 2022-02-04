@@ -32,6 +32,12 @@ import com.anatame.pickaflix.utils.parser.Parser2
 import com.anatame.pickaflix.utils.parser.Parser3
 
 import java.util.ArrayList
+import android.view.View
+import android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+import android.view.WindowManager
+
+
+
 
 
 class DetailFragment : Fragment() {
@@ -43,6 +49,7 @@ class DetailFragment : Fragment() {
     private lateinit var playerLoader: PlayerLoader
     private var streamUrl = ""
     private lateinit var dataHandler: DetailDataHandler
+    private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,19 +112,7 @@ class DetailFragment : Fragment() {
         }
 
         args.movieItem?.let{
-      //      setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
-
-            detailViewModel.getMovieDetails(it.Url)
-            //
-            if (it.movieType == "TV") {
-                detailViewModel.getSeasons(it.Url)
-
-            }
-
-            if (it.movieType == "Movie") {
-                detailViewModel.getMovieData(it.Url)
-
-            }
+            setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
         }
 
         detailViewModel.movieDetails.observe(viewLifecycleOwner, Observer { response ->
@@ -182,14 +177,52 @@ class DetailFragment : Fragment() {
             .centerCrop()
             .into(binding.ivMovieThumnail)
 
+        detailViewModel.getMovieDetails(source)
+        //
+        if (movieType == "TV") {
+            detailViewModel.getSeasons(source)
+            binding.clTvControls.visibility = View.VISIBLE
+
+        }
+
+        if (movieType == "Movie") {
+            detailViewModel.getMovieData(source)
+            binding.clMovieControls.visibility = View.VISIBLE
+        }
          Log.d("logit", source)
 
     }
 
     fun goFullScreen(){
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
         val fullScreenPlayerView = PlayerView(requireContext())
-        val dialog = object : Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+        dialog = object : Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+            override fun onCreate(savedInstanceState: Bundle?) {
+                super.onCreate(savedInstanceState)
+                hideSystemUi()
+            }
+
+            override fun onStart() {
+                super.onStart()
+                hideSystemUi()
+            }
+
+            private fun hideSystemUi() {
+                window!!
+                    .setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    )
+                //Set the dialog to immersive sticky mode
+                window!!.decorView.systemUiVisibility = (
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                                or SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+                //Clear the not focusable flag from the window
+                //Clear the not focusable flag from the window
+                window!!.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+            }
+
             override fun onBackPressed() {
                 activity!!.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 PlayerView.switchTargetView(playerLoader.getPlayer(), fullScreenPlayerView, playerLoader.getPlayerView())
@@ -209,8 +242,28 @@ class DetailFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-       // fullScreenActivity()
         loadPlayer(streamUrl)
+
+        if(this::dialog.isInitialized){
+            dialog.window!!
+                .setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                )
+            //Set the dialog to immersive sticky mode
+            dialog.window!!.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            or SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+            //Clear the not focusable flag from the window
+            //Clear the not focusable flag from the window
+            dialog.window!!.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        }
+
+        Log.d("onresume", "called")
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     override fun onPause() {
