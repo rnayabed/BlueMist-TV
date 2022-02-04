@@ -24,103 +24,40 @@ class HeadlessWebViewHelper(
     private var map: HashMap<String, String> = HashMap<String, String>()
 
     init {
-        map["referer"] = "https://fmovies.to"
+        map["referer"] = "https://hdtoday.tv/"
         Log.d("webviewInit", "initialized")
     }
 
     fun initView() : Instance{
-        Log.d("webviewInit", "initialized")
         webViewLayerType()
         epsPlayer.settings.userAgentString =
-            "Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion"
+            "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
         epsPlayer.settings.javaScriptEnabled = true
         epsPlayer.settings.domStorageEnabled = true
         epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
         epsPlayer.settings.databaseEnabled = true
         epsPlayer.settings.mediaPlaybackRequiresUserGesture = false
-        epsPlayer.settings.loadsImagesAutomatically = false
-        epsPlayer.settings.blockNetworkImage = true
-
-
-        epsPlayer.addJavascriptInterface(
-            WebAppInterface(context), "Android")
 
         epsPlayer.webViewClient = object : WebViewClient() {
 
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                epsPlayer.loadUrl(
-                    """javascript:(function f() {
-                            let myInterval = setInterval(() => {
-                            let server = document.querySelectorAll('.server');
-                            if(server.length != 0){
-                    
-                            server.forEach((item)=>{
-                                item.addEventListener('click', function() {
-                                 Android.finish();
-                                });
-                            });
-                          
-                               clearInterval(myInterval);
-                            }
-                        }, 200);
-                        
-                         let playInterval = setInterval(() => {
-                            let play = document.querySelector("iframe");
-                            if(play != null || play != 'undefined'){
-                               Android.finish();
-                              play.click();
-                                play.click();
-                                  play.click();
-                                   Android.finish();
-                               clearInterval(playInterval);
-                            }
-                        }, 200);
-          
-                      })()""".trimIndent().trimMargin()
-                );
-            }
-
             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-                Log.d("intercepted", request!!.url.host.toString())
-//                if (BlockHosts().hosts.contains(request!!.url.host)) {
-//                    Log.d("interceptedAndblocked", request!!.url.host.toString())
-//                    val textStream: InputStream = ByteArrayInputStream("".toByteArray())
-//                    return getTextWebResource(textStream)
-//                } else{
-//                    Log.d("AndNotblocked", request!!.url.host.toString())
-//                }
-
-                fun checkIfAllowed(host: String): Boolean{
-                    return BlockHosts().allowedHosts.contains(host) || host.contains("vidstream") ||  host.contains("mcloud")
-                }
-                
-                if(checkIfAllowed(request.url.host!!)){
-                    Log.d("AndNotblocked", request!!.url.host.toString())
-                } else {
-                    Log.d("interceptedAndblocked", request!!.url.host.toString())
+                if (BlockHosts().hosts.contains(request!!.url.host)) {
                     val textStream: InputStream = ByteArrayInputStream("".toByteArray())
                     return getTextWebResource(textStream)
                 }
-
                 return super.shouldInterceptRequest(view, request)
             }
 
             override fun onLoadResource(view: WebView?, url: String?) {
                 super.onLoadResource(view, url)
                 if (url != null) {
-                    Log.d("headlessWeb", url)
                     if(url.endsWith("playlist.m3u8")){
+                        Log.d("streamUrlgg", url)
                         onLoaded?.let { it(url) }
-                    } else if(url.endsWith("list.m3u8")){
-                        onLoaded?.let { it(url) }
-                        epsPlayer.settings.javaScriptEnabled = false
-                        epsPlayer.reload()
                     }
                 }
             }
         }
-
 
         return Instance()
 
@@ -129,6 +66,7 @@ class HeadlessWebViewHelper(
     inner class Instance(){
 
         fun loadUrl(link: String, javascriptEnabled: Boolean = true){
+            Log.d("webviewcalled", link)
             epsPlayer.settings.javaScriptEnabled = javascriptEnabled
             epsPlayer.loadUrl(link, map)
         }
@@ -151,24 +89,3 @@ class HeadlessWebViewHelper(
     }
 }
 
-class WebAppInterface(
-    private val mContext: Context,
-) {
-
-    @JavascriptInterface
-    fun iframe(frame: String) {
-        Log.d("frameData", frame)
-        (mContext as MainActivity).runOnUiThread {
-
-        }
-    }
-
-    /** Show a toast from the web page  */
-    @JavascriptInterface
-    fun finish() {
-
-        (mContext as MainActivity).runOnUiThread {
-            Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show()
-        }
-    }
-}

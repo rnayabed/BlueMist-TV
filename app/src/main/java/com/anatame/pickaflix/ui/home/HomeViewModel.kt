@@ -52,6 +52,10 @@ class HomeViewModel(
             try {
                 val cache = movieDao.getHomeScreenData()
 
+            //    movieData = parser.getMovieList()
+//                Log.d("HomeViewModel",movieData.toString())
+
+
                 if(cache == null){
                     Log.d("HomeViewModel", "making network call, cache empty")
                     sliderData = parser.getHeroSectionItems()

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         headlessWebViewHelper = HeadlessWebViewHelper(binding.hWebView, this)
         headlessWebViewHelperInstance = headlessWebViewHelper.initView()
-        headlessWebViewHelperInstance.loadUrl("https://fmovies.to/movie/eternals-5wwrq/1-full", false)
+        // headlessWebViewHelperInstance.loadUrl("https://fmovies.to/movie/eternals-5wwrq/1-full", false)
     }
 
     fun getWebPlayer(): HeadlessWebViewHelper.Instance {

@@ -17,7 +17,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentHomeBinding
 import com.anatame.pickaflix.model.HomeScreenData
 import com.anatame.pickaflix.ui.home.adapter.HomeScreenAdapter
@@ -33,7 +32,7 @@ import com.anatame.pickaflix.utils.data.db.MovieDatabase
 import com.anatame.pickaflix.utils.data.db.entities.Movie
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.HeroItem
 import com.anatame.pickaflix.utils.data.remote.PageParser.Home.DTO.MovieItem
-import com.anatame.pickaflix.utils.parser.Parser2
+import com.anatame.pickaflix.utils.parser.Parser3
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 import kotlinx.coroutines.Dispatchers
@@ -66,19 +65,10 @@ class HomeFragment : Fragment() {
         view.doOnPreDraw { startPostponedEnterTransition() }
 
         movieDao = context?.let { MovieDatabase.invoke(it).getMovieDao() }!!
-        val viewModelProviderFactory = HomeViewModelFactory(movieDao, Parser2)
+        val viewModelProviderFactory = HomeViewModelFactory(movieDao, Parser3)
         homeViewModel = ViewModelProvider(this, viewModelProviderFactory).get(HomeViewModel::class.java)
 
         homeViewModel.setFirstInit()
-
-        binding.topAppBar.setOnMenuItemClickListener { item ->
-            when(item.itemId){
-                R.id.search -> {
-                    navigateToSearch()
-                }
-            }
-            true
-        }
 
 
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, Observer {
@@ -138,7 +128,7 @@ class HomeFragment : Fragment() {
     }
 
 
-    fun handleWatchListLongClick(cardView: CardView, holder: HomeScreenAdapter.CategoryViewHolder, data: Movie) {
+    fun handleWatchListLongClick(cardView: CardView, holder: WatchListItem.Holder, data: Movie) {
         val destination = HomeFragmentDirections.actionNavigationHomeToHomeListDialogFragment(
             HomeBottomSheetData(
                 this@HomeFragment,

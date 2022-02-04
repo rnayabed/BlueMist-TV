@@ -82,6 +82,11 @@ class WatchListItem(
                     item)
                 scrollState.postValue(pos)
             }
+
+            adapter.setOnItemLongClickListener{pos, item, cardView ->
+                homeFragment.handleWatchListLongClick(cardView, holder, item)
+            }
+
         }
     }
 

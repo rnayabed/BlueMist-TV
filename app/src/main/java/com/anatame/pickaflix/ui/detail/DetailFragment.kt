@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter
 import com.anatame.pickaflix.common.utils.HeadlessWebViewHelper
 import com.anatame.pickaflix.ui.detail.models.ServerItem
 import com.anatame.pickaflix.utils.parser.Parser2
+import com.anatame.pickaflix.utils.parser.Parser3
 
 import java.util.ArrayList
 
@@ -56,7 +57,7 @@ class DetailFragment : Fragment() {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val viewModelFactory = DetailViewModelFactory(Parser2)
+        val viewModelFactory = DetailViewModelFactory(Parser3)
         detailViewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
 
         args.cvTransitionId?.let {
@@ -104,7 +105,19 @@ class DetailFragment : Fragment() {
         }
 
         args.movieItem?.let{
-            setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
+      //      setUpScreen(it.thumbnailUrl, it.Url, it.movieType)
+
+            detailViewModel.getMovieDetails(it.Url)
+            //
+            if (it.movieType == "TV") {
+                detailViewModel.getSeasons(it.Url)
+
+            }
+
+            if (it.movieType == "Movie") {
+                detailViewModel.getMovieData(it.Url)
+
+            }
         }
 
 
@@ -144,9 +157,6 @@ class DetailFragment : Fragment() {
             .into(binding.ivMovieThumnail)
 
          Log.d("logit", source)
-
-        val webPlayer = (activity as MainActivity).getWebPlayer()
-        dataHandler.handleDirectLinkLoaded(source)
 
     }
 

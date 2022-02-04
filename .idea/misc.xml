@@ -5,7 +5,9 @@
       <map>
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/drawable-v24/animated_loader.xml" value="0.21770833333333334" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/drawable-v24/ic_player_loading.xml" value="0.21770833333333334" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/drawable-v24/searchview_background.xml" value="0.1140625" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/drawable/ic_baseline_bookmarks_24.xml" value="0.10052083333333334" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/drawable/toolbarbg.xml" value="0.23697916666666666" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/activity_main.xml" value="0.19739583333333333" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/bottomsheet_home.xml" value="0.21666666666666667" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/fragment_dashboard.xml" value="0.19739583333333333" />
@@ -25,6 +27,7 @@
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_home_viewpager_item.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_home_watchlist.xml" value="0.17037037037037037" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/item_home_watchlist_rv_item.xml" value="0.536" />
+        <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/searchview_background.xml" value="0.21666666666666667" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/layout/vid_loading_anim.xml" value="0.19739583333333333" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Pickaflix/app/src/main/res/menu/home_toolbar_menu.xml" value="0.21666666666666667" />

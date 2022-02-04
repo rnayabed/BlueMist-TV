@@ -16,18 +16,18 @@ import okhttp3.Request
 import org.jsoup.Jsoup
 
 
-const val MOVIE_TAG = "movieItemList"
+const val MOVIE_TAG1 = "movieItemList"
 
-object Parser : ParserProvider {
+object Parser3 : ParserProvider {
     override suspend fun getVidSource(serverDataID: String): VidData {
-        val vidData = RetrofitInstance.api.getVidData("https://fmoviesto.cc/ajax/get_link/$serverDataID")
+        val vidData = RetrofitInstance.api.getVidData("https://hdtoday.tv/ajax/get_link/$serverDataID")
         return vidData.body()!!
     }
 
     override suspend fun getMovieServers(movieID: String): ArrayList<ServerItem> {
         val serverList = ArrayList<ServerItem>()
 
-        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/movie/episodes/$movieID")
+        val doc = Jsoup.connect("https://hdtoday.tv/ajax/movie/episodes/$movieID")
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
             .timeout(1000 * 5)
@@ -56,7 +56,7 @@ object Parser : ParserProvider {
     override suspend fun getServers(episodeID: String): ArrayList<ServerItem> {
         val serverList = ArrayList<ServerItem>()
 
-        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/episode/servers/$episodeID")
+        val doc = Jsoup.connect("https://hdtoday.tv/ajax/v2/episode/servers/$episodeID")
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
             .timeout(1000 * 5)
@@ -86,7 +86,7 @@ object Parser : ParserProvider {
     override suspend fun getEpisodes(seasonID: String): ArrayList<EpisodeItem>{
         val episodeList = ArrayList<EpisodeItem>()
 
-        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/season/episodes/$seasonID")
+        val doc = Jsoup.connect("https://hdtoday.tv/ajax/v2/season/episodes/$seasonID")
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
             .timeout(1000 * 5)
@@ -106,7 +106,7 @@ object Parser : ParserProvider {
         val seasonList = ArrayList<SeasonItem>()
 
         Log.d("movieSeasons","called from parser")
-        val doc = Jsoup.connect("https://fmoviesto.cc/ajax/v2/tv/seasons/$showDataID")
+        val doc = Jsoup.connect("https://hdtoday.tv/ajax/v2/tv/seasons/$showDataID")
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
             .timeout(1000 * 5)
@@ -132,7 +132,7 @@ object Parser : ParserProvider {
     override suspend fun getMovieDetails(movieSrc: String): MovieDetails {
         lateinit var movieDetail: MovieDetails
 
-        val url = "https://fmoviesto.cc${movieSrc}"
+        val url = "https://hdtoday.tv${movieSrc}"
         val doc = Jsoup.connect(url)
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
@@ -233,12 +233,12 @@ object Parser : ParserProvider {
             .build()
 
         val request = Request.Builder()
-            .url("https://fmoviesto.cc/ajax/search")
-            .addHeader("authority", "fmoviesto.cc")
+            .url("https://hdtoday.tv/ajax/search")
+            .addHeader("authority", "hdtoday.tv")
             .addHeader("accept", "*/*")
             .addHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
-            .addHeader("origin", "https://fmoviesto.cc")
-            .addHeader("referer", "https://fmoviesto.cc/search/")
+            .addHeader("origin", "https://hdtoday.tv/")
+            .addHeader("referer", "https://hdtoday.tv/search/")
             .addHeader("sec-ch-ua-mobile", "?0")
             .addHeader("sec-ch-ua-platform", "Windows")
             .addHeader("sec-fetch-mode", "cors")
@@ -288,79 +288,29 @@ object Parser : ParserProvider {
     override suspend fun getHeroSectionItems() : ArrayList<HeroItem>{
         val heroItemList = ArrayList<HeroItem>()
 
-        val doc = Jsoup.connect(MOVIE_URL)
-            .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
-            .maxBodySize(0)
-            .timeout(1000*5)
-            .get()
-
-        val sliderList = doc.getElementsByClass("swiper-slide")
-        sliderList.forEach { element ->
-            val sliderItem = element.allElements[0]
-
-            val sliderDivStyle = sliderItem.attr("style")
-            val backgroundImageUrl = sliderDivStyle.getBackgroundImageUrl()
-            val anchor = sliderItem.select("a")
-            val movieHref = anchor.attr("href")
-            val movieTitle = anchor.attr("title")
-            val detailItem = sliderItem.select(".scd-item")
-            var movieDuration = ""
-            var movieRating = ""
-            var movieType = ""
-            detailItem.forEach { item ->
-                if(item.text().contains("Duration: ")) {
-                    movieDuration = item.select("strong").text()
-                }
-
-                if(item.text().contains("IMDB: ")) {
-                    movieRating = item.select("strong").text()
-                }
-            }
-            Log.d("detailItem", "$movieDuration $movieRating")
-
-            val movieCaption = sliderItem.getElementsByClass("scd-item")[0]
-
-            Log.d(MOVIE_TAG1, """
-                backgroundImage: $backgroundImageUrl
-                title: $movieTitle
-                href: $movieHref
-                movieCaption: $movieCaption
-            """.trimIndent())
-
-            if (movieHref.contains("tv")) {
-                movieType = "TV"
-            }
-            if (movieHref.contains("movie")) {
-                movieType = "Movie"
-            }
-
-            heroItemList.add(HeroItem(
-                backgroundImageUrl,
-                movieTitle,
-                movieHref,
-                movieDuration,
-                movieRating,
-                movieType
-            ))
-        }
 
         return heroItemList
     }
 
     override suspend fun getMovieList(page: Int): ArrayList<MovieItem> {
         var movieItemListData = ArrayList<MovieItem>()
-        val doc = Jsoup.connect(MOVIE_URL)
+        val doc = Jsoup.connect("https://hdtoday.tv/home")
             .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
             .maxBodySize(0)
             .timeout(1000*5)
             .get()
 
-        val movieItemList =  doc.getElementsByClass(MOVIE_LIST_SELECTOR)
+        val movieItemList =  doc.getElementsByClass("flw-item")
+
         movieItemList.forEach { element ->
             val movieItem = element.allElements[0]
 
+            Log.d("parser3", movieItem.toString())
+
             val image = movieItem.select("img")
             val imageSrc = image.attr("data-src")
+
+            Log.d("parser3image", imageSrc.toString())
 
             val anchor = movieItem.select("a")
             val movieHref = anchor.attr("href")
@@ -392,15 +342,15 @@ object Parser : ParserProvider {
                    ${movieLength}
                    ${movieLength.length}
                    """.trimIndent())
-//            LogMovieItems(
-//                movieTitle,
-//                movieHref,
-//                imageSrc,
-//                movieReleaseDate,
-//                movieLength,
-//                movieQuality,
-//                movieType
-//            )
+            LogMovieItems(
+                movieTitle,
+                movieHref,
+                imageSrc,
+                movieReleaseDate,
+                movieLength,
+                movieQuality,
+                movieType
+            )
 
             val movieItemData = MovieItem(
                 title = movieTitle,
@@ -452,7 +402,7 @@ object Parser : ParserProvider {
             .build()
 
         var request = Request.Builder()
-            .url("https://fmoviesto.cc/ajax/search")
+            .url("https://hdtoday.tv/ajax/search")
             .post(formBody)
             .build()
 
@@ -483,10 +433,5 @@ object Parser : ParserProvider {
 }
 
 
-fun String.getBackgroundImageUrl(): String{
-    return this.substring(
-        (this.indexOf('(') + 1),
-        this.indexOf(')')
-    )
-}
+
 

@@ -34,8 +34,11 @@ object Parser2 : ParserProvider {
                 val movieItem = element.allElements[0]
                 // Log.d("parser2", movieItem.toString())
 
+
+
                 val image = movieItem.select("img")
-                val imageSrc = image.attr("src")
+                val imgSrcLowRes = image.attr("src")
+                val imageSrc = imgSrcLowRes.substring(0..imgSrcLowRes.indexOf(".jpg")+3)
 
                 val anchor = movieItem.select("a")
                 val movieHref = anchor.attr("href")
@@ -138,7 +141,7 @@ object Parser2 : ParserProvider {
 
 //            element.allElements.forEachIndexed { index, mElement ->
 //               val item = mElement.getElementsByClass("film-poster")[index]
-//                Log.d(MOVIE_TAG, item.select("img")[0].absUrl("src"))
+//                Log.d(MOVIE_TAG1, item.select("img")[0].absUrl("src"))
 //            }
     }
 

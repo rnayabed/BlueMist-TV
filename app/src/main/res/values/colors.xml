@@ -10,6 +10,8 @@
 
     <color name="Primary">#0085FF</color>
     <color name="PrimaryVariant">#4DD0E1</color>
+    <color name="ToolbarColor">#303134</color>
+    <color name="ToolbarIconColor">#9aa0a6</color>
     <color name="StatusBarColor">#1F1F1F</color>
     <color name="BackgroundDark">#121212</color>
 
