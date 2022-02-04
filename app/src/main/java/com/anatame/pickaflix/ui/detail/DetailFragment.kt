@@ -120,6 +120,23 @@ class DetailFragment : Fragment() {
             }
         }
 
+        detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+                is Resource.Success -> dataHandler.handleSeasonsLoaded(response)
+                is Resource.Error -> {
+                    Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+        detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+                is Resource.Success -> dataHandler.handleEpisodeLoaded(response)
+                is Resource.Error -> {
+                    Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
 
         detailViewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
             when(response){
