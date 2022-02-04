@@ -149,6 +149,12 @@ class HomeFragment : Fragment() {
         }
     }
 
+    fun clearWatchList() {
+        lifecycleScope.launch(Dispatchers.IO){
+            movieDao.clearWatchList()
+            homeViewModel.updateHomeScreenData()
+        }
+    }
 
     // Navigation methods
 
@@ -254,6 +260,8 @@ class HomeFragment : Fragment() {
             duration = 300
         }
     }
+
+
 
 
 }

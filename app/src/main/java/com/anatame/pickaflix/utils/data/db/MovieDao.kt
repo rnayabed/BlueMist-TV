@@ -21,4 +21,7 @@ interface MovieDao {
     @Delete
     fun deleteMovieFromWatchList(movie: Movie)
 
+    @Query("DELETE FROM movies")
+    fun clearWatchList()
+
 }

@@ -37,6 +37,13 @@ class HomeListDialogFragment : BottomSheetDialogFragment() {
             }
         }
 
+        binding.DeleteAllBtn.setOnClickListener{
+            args.homeBottomSheetData?.let {
+                it.homeFragment.clearWatchList()
+                dismiss()
+            }
+        }
+
         return binding.root
     }
 

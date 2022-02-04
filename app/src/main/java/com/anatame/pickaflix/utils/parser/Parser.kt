@@ -144,8 +144,8 @@ object Parser : ParserProvider {
         movieItems.forEach { element ->
             val movieItem = element.allElements[0]
             val headerContainer = movieItem.getElementsByClass("heading-name")
-            val statsContainer = movieItem.getElementsByClass("stats")
-            val statItems = statsContainer[0].getElementsByClass("mr-3")
+            val statsContainer = movieItem.getElementsByClass("dp-i-stats")
+            val statItems = statsContainer[0].getElementsByClass("mr-1")
 
             val movieTitle = headerContainer.select("a").text()
             val movieQuality = movieItem.getElementsByClass("btn-quality").text()

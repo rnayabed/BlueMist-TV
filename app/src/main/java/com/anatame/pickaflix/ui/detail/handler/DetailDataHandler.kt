@@ -14,6 +14,7 @@ import com.anatame.pickaflix.databinding.FragmentDetailBinding
 import com.anatame.pickaflix.ui.detail.DetailViewModel
 import com.anatame.pickaflix.ui.detail.adapter.EpisodeRVAdapter
 import com.anatame.pickaflix.ui.detail.models.EpisodeItem
+import com.anatame.pickaflix.ui.detail.models.MovieDetails
 import com.anatame.pickaflix.ui.detail.models.SeasonItem
 import com.anatame.pickaflix.ui.detail.models.ServerItem
 import com.anatame.pickaflix.utils.Resource
@@ -29,13 +30,11 @@ class DetailDataHandler(
     private lateinit var streamUrl: String
     private lateinit var detailHandlerListener: DetailHandlerListener
 
-
-    fun handleVidEmbedLinkLoaded(response: Resource<String>){
-        response.data?.let { it ->
-            getStreamUrl(it)
-            binding.progressBar.visibility = View.GONE
-            binding.loadingIcon.show()
+    fun handleMovieDetailsLoaded(response: Resource<MovieDetails>){
+        response.data?.let{
+            binding.tvMovieTitle.text =  it.movieTitle
         }
+
     }
 
     fun handleSeasonsLoaded(response: Resource<List<SeasonItem>>){
@@ -88,6 +87,14 @@ class DetailDataHandler(
                 binding.progressBar.visibility = View.VISIBLE
                 binding.loadingIcon.hide()
             }
+        }
+    }
+
+    fun handleVidEmbedLinkLoaded(response: Resource<String>){
+        response.data?.let { it ->
+            getStreamUrl(it)
+            binding.progressBar.visibility = View.GONE
+            binding.loadingIcon.show()
         }
     }
 

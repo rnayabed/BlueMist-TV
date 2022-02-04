@@ -140,86 +140,100 @@ object Parser3 : ParserProvider {
             .get()
 
 
-        val movieItems = doc.getElementsByClass("page-detail")
-        movieItems.forEach { element ->
-            val movieItem = element.allElements[0]
-            val headerContainer = movieItem.getElementsByClass("heading-name")
-            val statsContainer = movieItem.getElementsByClass("stats")
-            val statItems = statsContainer[0].getElementsByClass("mr-3")
+        Log.d("getMovieDetails", "Called $doc")
 
-            val movieTitle = headerContainer.select("a").text()
-            val movieQuality = movieItem.getElementsByClass("btn-quality").text()
-            val movieRating = statItems[1]?.text()
-            val movieLength = statsContainer[0].allElements.last()?.text()
-            val movieDescription = movieItem.getElementsByClass("description").text()
-            val movieBackgroundCoverUrl =
-                movieItem.getElementsByClass("w_b-cover").attr("style").getBackgroundImageUrl()
-            var country = ""
-            var genre = ""
-            var released = ""
-            var production = ""
-            var casts = ""
-            val movieDataID = movieItem.getElementsByClass("detail_page-watch").attr("data-id")
-            val movieTrailer = doc.getElementById("iframe-trailer")
-                ?.attr("data-src")
-                .toString()
+        val statsContainer = doc.body().getElementsByClass("stats")
 
-            val elements = movieItem.getElementsByClass("row-line")
-            elements.forEach { item ->
-                if (item.select("span").text() == "Country:") country = item.select("a").text()
-                if (item.select("span").text() == "Genre:") {
-                    item.select("a").forEach { g ->
-                        if(genre.isNotEmpty()){
-                            genre += ", ${g.text()}"
-                        } else {
-                            genre = g.text()
-                        }
-                    }
-                }
-                if (item.select("span").text() == "Released:") released = item.text()
-                if (item.select("span").text() == "Production:") {
-                    item.select("a").forEach { p ->
-                        if(production.isNotEmpty()){
-                            production += ", ${p.text()}"
-                        } else {
-                            production = p.text()
-                        }
 
-                    }
-                }
+        var movieRating = doc.body().getElementsByClass("btn-imdb").text()
+        val movieQuality = doc.body().getElementsByClass("btn-quality").text()
+        val movieDataID = doc.body().getElementsByClass("detail_page-watch").attr("data-id")
+        val movieTitle = doc.body().getElementsByClass("heading-name").text()
+        val movieTrailer = doc.body().getElementById("iframe-trailer")
+            ?.attr("data-src")
+            .toString()
+        var country = ""
+        var genre = ""
+        var released = ""
+        var production = ""
+        var casts = ""
+        val movieDescription = ""
+        val movieBackgroundCoverUrl =
+            doc.body().getElementsByClass("cover_follow").attr("style").getBackgroundImageUrl()
 
-                if (item.select("span").text() == "Casts:") {
-                    item.select("a").forEach { c ->
-                        if(casts.isNotEmpty()){
-                            casts += ", ${c.text()}"
-                        } else {
-                            casts = c.text()
-                        }
+        var movieLength = ""
+
+
+        val elements = doc.body().getElementsByClass("row-line")
+        elements.forEach { item ->
+            if (item.select("span").text() == "Country:") country = item.select("a").text()
+            if (item.select("span").text() == "Genre:") {
+                item.select("a").forEach { g ->
+                    if(genre.isNotEmpty()){
+                        genre += ", ${g.text()}"
+                    } else {
+                        genre = g.text()
                     }
                 }
             }
+            if (item.select("span").text() == "Released:") released = item.text()
+            if (item.select("span").text() == "Production:") {
+                item.select("a").forEach { p ->
+                    if(production.isNotEmpty()){
+                        production += ", ${p.text()}"
+                    } else {
+                        production = p.text()
+                    }
 
-            val finalUrl = movieSrc.substring(1)
+                }
+            }
 
-            movieDetail = MovieDetails(
-                "https://fmoviesto.cc/watch-${movieSrc}",
-                movieTrailer,
-                movieDataID,
-                movieTitle,
-                movieQuality,
-                movieRating!!,
-                movieLength!!,
-                movieDescription,
-                movieBackgroundCoverUrl,
-                country,
-                genre,
-                released,
-                production,
-                casts
-            )
+            if (item.select("span").text() == "Duration:") {
+                movieLength = item.text()
+            }
+            if (item.select("span").text() == "Casts:") {
+                item.select("a").forEach { c ->
+                    if(casts.isNotEmpty()){
+                        casts += ", ${c.text()}"
+                    } else {
+                        casts = c.text()
+                    }
+                }
+            }
         }
 
-        Log.d("MovieDetailsHTML", movieDetail.toString())
+        Log.d("movieTitleBruh", """
+           $movieTrailer,
+            $movieDataID,
+            $movieTitle,
+            $movieQuality,
+            $movieRating,
+            $movieLength,
+            $movieDescription,
+            $movieBackgroundCoverUrl,
+            $country,
+            $genre,
+            $released,
+            $production,
+            $casts
+            """.trimIndent())
+
+        movieDetail = MovieDetails(
+            "https://hdtoday.tv/watch-${movieSrc}",
+            movieTrailer,
+            movieDataID,
+            movieTitle,
+            movieQuality,
+            movieRating,
+            movieLength,
+            movieDescription,
+            movieBackgroundCoverUrl,
+            country,
+            genre,
+            released,
+            production,
+            casts
+        )
 
         return movieDetail
     }

@@ -112,6 +112,7 @@ class DetailViewModel(
         viewModelScope.launch (Dispatchers.IO) {
             try {
                 movieDetails.postValue(Resource.Loading())
+                Log.d("checkData", "loading called $movieSrc")
                 val response = parser.getMovieDetails(movieSrc)
                 Log.d("checkData", response.movieTitle)
                 movieDetails.postValue(Resource.Success(response))

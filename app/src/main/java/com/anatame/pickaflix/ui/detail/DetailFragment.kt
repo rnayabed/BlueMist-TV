@@ -120,6 +120,15 @@ class DetailFragment : Fragment() {
             }
         }
 
+        detailViewModel.movieDetails.observe(viewLifecycleOwner, Observer { response ->
+            when(response){
+                is Resource.Success -> dataHandler.handleMovieDetailsLoaded(response)
+                is Resource.Error -> {
+                    Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
         detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
             when(response){
                 is Resource.Success -> dataHandler.handleSeasonsLoaded(response)
