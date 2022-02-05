@@ -110,6 +110,8 @@ class DetailFragment : Fragment() {
 
                 Log.d("totalLoadTimeTaken", (System.currentTimeMillis() - begin).toString())
 
+                Toast.makeText(requireContext(), "Total time taken ${(System.currentTimeMillis() - begin)}", Toast.LENGTH_SHORT).show()
+
                 if(this@DetailFragment::vidHelper.isInitialized){
                     vidHelper.releasePlayer()
                 }

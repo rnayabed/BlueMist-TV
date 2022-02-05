@@ -63,6 +63,19 @@ class HeadlessWebViewHelper(
                         Log.d("streamUrlgg", url)
                         onLoaded?.let { it(url) }
                         epsPlayer.settings.mediaPlaybackRequiresUserGesture = true
+
+                        val sharedPrefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+                        if(sharedPrefs.getBoolean("isFirstLoad", false) ){
+
+                        } else {
+                            val editor = sharedPrefs.edit()
+                            editor.apply{
+                                putBoolean("isFirstLoad", true)
+                            }.apply()
+                        }
+
+
                     }
                 }
             }
