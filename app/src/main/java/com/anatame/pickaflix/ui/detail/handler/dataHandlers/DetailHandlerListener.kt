@@ -1,4 +1,4 @@
-package com.anatame.pickaflix.ui.detail.handler
+package com.anatame.pickaflix.ui.detail.handler.dataHandlers
 
 import com.anatame.pickaflix.ui.detail.models.ServerItem
 

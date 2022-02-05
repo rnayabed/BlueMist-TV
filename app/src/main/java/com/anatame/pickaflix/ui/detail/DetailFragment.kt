@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.core.view.ViewCompat
@@ -17,25 +16,23 @@ import androidx.navigation.fragment.navArgs
 import com.anatame.pickaflix.MainActivity
 import com.anatame.pickaflix.R
 import com.anatame.pickaflix.databinding.FragmentDetailBinding
-import com.anatame.pickaflix.ui.detail.handler.DetailDataHandler
-import com.anatame.pickaflix.ui.detail.handler.DetailHandlerListener
+import com.anatame.pickaflix.ui.detail.handler.dataHandlers.DetailHandlerListener
 import com.anatame.pickaflix.utils.PlayerHelper
 import com.anatame.pickaflix.utils.PlayerLoader
 import com.anatame.pickaflix.utils.Resource
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.transition.MaterialContainerTransform
-import android.widget.ArrayAdapter
-import com.anatame.pickaflix.common.utils.HeadlessWebViewHelper
-import com.anatame.pickaflix.ui.detail.models.ServerItem
-import com.anatame.pickaflix.utils.parser.Parser2
 import com.anatame.pickaflix.utils.parser.Parser3
 
-import java.util.ArrayList
 import android.view.View
 import android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 import android.view.WindowManager
-import androidx.compose.ui.platform.ViewCompositionStrategy
+import com.anatame.pickaflix.ui.detail.handler.dataHandlers.AbstractDetailHandler
+import com.anatame.pickaflix.ui.detail.handler.dataHandlers.DetailHandlerImpl
+import com.anatame.pickaflix.ui.detail.handler.uihandlers.AbstractDetailUiHandler
+import com.anatame.pickaflix.ui.detail.handler.uihandlers.DetailUiHandlerImpl
+import com.anatame.pickaflix.ui.detail.handler.uihandlers.DetailUiHandlerListener
 
 
 class DetailFragment : Fragment() {
@@ -46,7 +43,6 @@ class DetailFragment : Fragment() {
     private lateinit var vidHelper: PlayerHelper
     private lateinit var playerLoader: PlayerLoader
     private var streamUrl = ""
-    private lateinit var dataHandler: DetailDataHandler
     private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,20 +80,41 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.loadingIcon.hide()
-        // Spinner element
 
+        val detailUiHandler: AbstractDetailUiHandler = DetailUiHandlerImpl(
+        binding,
+        requireContext())
 
-        dataHandler = context?.let {
-            DetailDataHandler(
-                viewLifecycleOwner,
-                it,
-                activity as MainActivity,
-                binding,
-                detailViewModel
-            )
-        }!!
+        val detailDataHandler: AbstractDetailHandler = DetailHandlerImpl((activity as MainActivity).getWebPlayer())
 
-        dataHandler.initCompose()
+        detailUiHandler.addListener(object : DetailUiHandlerListener {
+            override fun seasonItemSelected(seasonDataID: String) {
+                detailViewModel.getEpisodes(seasonDataID)
+            }
+
+            override fun episodeItemSelected(episodeDataID: String) {
+                detailViewModel.getSelectedEpisodeVid(episodeDataID)
+            }
+
+            override fun videoEmbedLinkLoaded(embedUrl: String) {
+                detailDataHandler.getStreamUrl(embedUrl)
+            }
+
+        })
+
+        detailDataHandler.addListener(object : DetailHandlerListener{
+            override fun onVideoUrlLoaded(url: String) {
+                if(this@DetailFragment::vidHelper.isInitialized){
+                    vidHelper.releasePlayer()
+                }
+                streamUrl = url
+                loadPlayer(url)
+
+                binding.loadingIcon.hide()
+                binding.progressBar.visibility = View.GONE
+            }
+        })
+
 
 
         binding.fullscreenBtn.setOnClickListener {
@@ -119,7 +136,11 @@ class DetailFragment : Fragment() {
 
         detailViewModel.movieDetails.observe(viewLifecycleOwner, Observer { response ->
             when(response){
-                is Resource.Success -> dataHandler.handleMovieDetailsLoaded(response)
+                is Resource.Success -> response.data?.let {
+                    detailUiHandler.handleMovieDetailsLoaded(
+                        it
+                    )
+                }
                 is Resource.Error -> {
                     Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
                 }
@@ -128,7 +149,7 @@ class DetailFragment : Fragment() {
 
         detailViewModel.seasonList.observe(viewLifecycleOwner, Observer { response ->
             when(response){
-                is Resource.Success -> dataHandler.handleSeasonsLoaded(response)
+                is Resource.Success -> response.data?.let { detailUiHandler.handleSeasonsLoaded(it) }
                 is Resource.Error -> {
                     Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
                 }
@@ -137,7 +158,7 @@ class DetailFragment : Fragment() {
 
         detailViewModel.episodeList.observe(viewLifecycleOwner, Observer { response ->
             when(response){
-                is Resource.Success -> dataHandler.handleEpisodeLoaded(response)
+                is Resource.Success -> response.data?.let { detailUiHandler.handleEpisodeLoaded(it) }
                 is Resource.Error -> {
                     Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
                 }
@@ -146,22 +167,17 @@ class DetailFragment : Fragment() {
 
         detailViewModel.vidEmbedLink.observe(viewLifecycleOwner, Observer { response ->
             when(response){
-                is Resource.Success -> dataHandler.handleVidEmbedLinkLoaded(response)
+                is Resource.Success -> response.data?.let {
+                    detailUiHandler.getVideoEmbedLinkLoaded(
+                        it
+                    )
+                }
                 is Resource.Error -> {
                     Toast.makeText(requireContext(), "Network call being interrupted. Try using a VPN service or try from a different network", Toast.LENGTH_SHORT).show()
                 }
             }
         })
 
-        dataHandler.addListener(object : DetailHandlerListener{
-            override fun onVideoUrlLoaded(url: String) {
-                if(this@DetailFragment::vidHelper.isInitialized){
-                    vidHelper.releasePlayer()
-                }
-                streamUrl = url
-                loadPlayer(url)
-            }
-        })
     }
 
     private fun loadPlayer(url: String) {
