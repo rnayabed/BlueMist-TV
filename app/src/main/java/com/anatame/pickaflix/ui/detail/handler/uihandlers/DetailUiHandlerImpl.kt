@@ -2,6 +2,7 @@ package com.anatame.pickaflix.ui.detail.handler.uihandlers
 
 import android.content.Context
 import android.view.View
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,10 @@ class DetailUiHandlerImpl(
         binding.progressBar.visibility = View.INVISIBLE
         binding.loadingIcon.show()
         episodeStateList.value = episodes
+    }
+
+    override fun getSelectedEpisode(epsDataID: String) {
+        super.getSelectedEpisode(epsDataID)
     }
 
 }

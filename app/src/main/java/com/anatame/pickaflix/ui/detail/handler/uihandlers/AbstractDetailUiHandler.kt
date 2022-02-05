@@ -23,7 +23,7 @@ abstract class AbstractDetailUiHandler(
     abstract fun handleMovieDetailsLoaded(movieDetails: MovieDetails)
     abstract fun handleEpisodeLoaded(episodes: List<EpisodeItem>)
 
-    fun handleSeasonsLoaded(seasons: List<SeasonItem>){
+    open fun handleSeasonsLoaded(seasons: List<SeasonItem>){
         val spinner = binding.seasonSpinner
         val seasons = seasons
 
@@ -55,13 +55,13 @@ abstract class AbstractDetailUiHandler(
 
     }
 
-    protected fun getSelectedEpisode(epsDataID: String){
+    protected open fun getSelectedEpisode(epsDataID: String){
         callEpisodeItemSelectedListener(epsDataID)
         binding.progressBar.visibility = View.VISIBLE
         binding.loadingIcon.hide()
     }
 
-    fun getVideoEmbedLinkLoaded(embedUrl: String){
+    open fun getVideoEmbedLinkLoaded(embedUrl: String){
         binding.progressBar.visibility = View.GONE
         binding.loadingIcon.show()
         callVideoEmbedLoadedListener(embedUrl)
