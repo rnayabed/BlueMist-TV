@@ -1,8 +1,12 @@
 package com.anatame.pickaflix.ui.home
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +77,6 @@ class HomeFragment : Fragment() {
 
         homeViewModel.setFirstInit()
 
-
         homeViewModel.homeScreenData.observe(viewLifecycleOwner, Observer {
             when(it){
                 is Resource.Loading -> {
@@ -96,7 +99,6 @@ class HomeFragment : Fragment() {
         })
 
     }
-
 
 
     fun setUpRecyclerView(homeScreenData: HomeScreenData){

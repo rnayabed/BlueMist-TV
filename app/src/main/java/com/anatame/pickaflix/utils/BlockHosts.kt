@@ -6,7 +6,9 @@ data class BlockHosts(
         "g.jwpsrv.com"
 
     ),
+
     val hosts: List<String> = listOf<String>(
+        "www.googletagmanager.com",
         "absolutionbravery.com",
         "addthis.com",
         "s7.addthis.com",

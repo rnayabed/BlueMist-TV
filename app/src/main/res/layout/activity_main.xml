@@ -37,7 +37,7 @@
     <com.anatame.pickaflix.ui.views.HeadlessWebView
         android:id="@+id/hWebView"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="250dp"
         android:visibility="invisible"
         android:translationZ="10dp"
         app:layout_constraintBottom_toTopOf="@id/nav_view"

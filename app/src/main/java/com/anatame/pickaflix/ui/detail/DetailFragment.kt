@@ -87,6 +87,8 @@ class DetailFragment : Fragment() {
 
         val detailDataHandler: AbstractDetailHandler = DetailHandlerImpl((activity as MainActivity).getWebPlayer())
 
+        var begin = System.currentTimeMillis()
+
         detailUiHandler.addListener(object : DetailUiHandlerListener {
             override fun seasonItemSelected(seasonDataID: String) {
                 detailViewModel.getEpisodes(seasonDataID)
@@ -98,12 +100,16 @@ class DetailFragment : Fragment() {
 
             override fun videoEmbedLinkLoaded(embedUrl: String) {
                 detailDataHandler.getStreamUrl(embedUrl)
+                begin = System.currentTimeMillis()
             }
 
         })
 
         detailDataHandler.addListener(object : DetailHandlerListener{
             override fun onVideoUrlLoaded(url: String) {
+
+                Log.d("totalLoadTimeTaken", (System.currentTimeMillis() - begin).toString())
+
                 if(this@DetailFragment::vidHelper.isInitialized){
                     vidHelper.releasePlayer()
                 }

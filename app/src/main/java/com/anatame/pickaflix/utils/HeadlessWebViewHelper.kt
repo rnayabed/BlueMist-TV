@@ -34,7 +34,7 @@ class HeadlessWebViewHelper(
             "Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36"
         epsPlayer.settings.javaScriptEnabled = true
         epsPlayer.settings.domStorageEnabled = true
-        epsPlayer.settings.cacheMode = WebSettings.LOAD_DEFAULT
+        epsPlayer.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         epsPlayer.settings.databaseEnabled = true
         epsPlayer.settings.mediaPlaybackRequiresUserGesture = false
         epsPlayer.settings.loadsImagesAutomatically = false
@@ -43,7 +43,10 @@ class HeadlessWebViewHelper(
         epsPlayer.webViewClient = object : WebViewClient() {
 
             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+               Log.d("intercepted", request?.url?.host.toString())
+
                 if (BlockHosts().hosts.contains(request!!.url.host)) {
+                    Log.d("interceptedBlocked", request?.url.toString())
                     val textStream: InputStream = ByteArrayInputStream("".toByteArray())
                     return getTextWebResource(textStream)
                 }
@@ -52,6 +55,9 @@ class HeadlessWebViewHelper(
 
             override fun onLoadResource(view: WebView?, url: String?) {
                 super.onLoadResource(view, url)
+                if (url != null) {
+                    Log.d("streamUrlgg", url)
+                }
                 if (url != null) {
                     if(url.endsWith("playlist.m3u8")){
                         Log.d("streamUrlgg", url)

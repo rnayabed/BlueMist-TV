@@ -1,7 +1,9 @@
 package com.anatame.pickaflix
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -52,8 +54,24 @@ class MainActivity : AppCompatActivity() {
 
         headlessWebViewHelper = HeadlessWebViewHelper(binding.hWebView, this)
         headlessWebViewHelperInstance = headlessWebViewHelper.initView()
-        headlessWebViewHelperInstance.loadUrl("https://google.com", false)
+
+        val shrd = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        Log.d("isFirstLoad", shrd.getBoolean("isFirstLoad", false).toString())
+        if(shrd.getBoolean("isFirstLoad", false) ){
+
+        } else {
+
+            headlessWebViewHelperInstance.loadUrl("https://rabbitstream.net/embed-4/2OSbWoyw5rBE?z=")
+            headlessWebViewHelperInstance.setOnStreamUrlLoadedListener {
+                Log.d("loadingFromMainActivity", "well")
+                val editor = shrd.edit()
+                editor.apply{
+                    putBoolean("isFirstLoad", true)
+                }.apply()
+            }
+        }
     }
+
 
     fun getWebPlayer(): HeadlessWebViewHelper.Instance {
         return headlessWebViewHelperInstance
