@@ -45,6 +45,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                        <ImageButton
+                            android:background="@null"
+                            android:id="@+id/searchIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:src="@drawable/ic_baseline_search_24"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_height="wrap_content"/>
+
                         <TextView
                             android:textColor="@color/ToolbarIconColor"
                             android:textStyle="normal"
@@ -54,7 +65,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/searchIcon"
                             android:text="Search"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,7 +98,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </com.anatame.pickaflix.ui.views.LoadingIcon>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:backgroundTint="@color/Primary"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_baseline_shuffle_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

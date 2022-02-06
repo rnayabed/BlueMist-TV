@@ -6,6 +6,19 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
+    <ImageButton
+        android:translationZ="10dp"
+        android:background="@null"
+        android:src="@drawable/ic_baseline_hd_24"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        app:layout_constraintTop_toTopOf="@id/cvCardContainer"
+        app:layout_constraintEnd_toEndOf="@id/cvCardContainer"
+        android:id="@+id/iv_quality"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:tint="@color/PrimaryVariant" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvCardContainer"
         app:strokeWidth="0dp"
