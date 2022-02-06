@@ -44,6 +44,7 @@ class HeadlessWebViewHelper(
 
             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
                Log.d("intercepted", request?.url?.host.toString())
+                Log.d("RequestHeaders", request?.requestHeaders.toString())
 
                 if (BlockHosts().hosts.contains(request!!.url.host)) {
                     Log.d("interceptedBlocked", request?.url.toString())

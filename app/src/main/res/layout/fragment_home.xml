@@ -22,24 +22,19 @@
             app:statusBarForeground="@color/BackgroundDark"
             android:layout_height="wrap_content">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:background="@color/BackgroundDark"
-                android:backgroundTint="@color/BackgroundDark"
-                android:id="@+id/collapsing_toolbar"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:contentScrim="@android:color/transparent"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap|enterAlways">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="8dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|enterAlways|snap"
+                android:background="@color/BackgroundDark"
+                android:layout_height="match_parent">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="6dp"
                     app:cardCornerRadius="24dp"
-                    android:layout_marginBottom="12dp"
+                    app:cardElevation="8dp"
+                    app:strokeWidth="0dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/searchview_background"
@@ -63,19 +58,16 @@
                             android:text="Search"/>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-
-            
+            </FrameLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             android:id="@+id/RV_HomeScreen"
-            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_marginBottom="64dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"

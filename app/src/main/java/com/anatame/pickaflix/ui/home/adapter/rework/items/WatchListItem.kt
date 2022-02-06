@@ -57,7 +57,7 @@ class WatchListItem(
             tvCategoryTitle.text = categoryTitle
 
             val params: ViewGroup.LayoutParams = rvCategoryItems.layoutParams
-            params.height = 130.px
+            params.height = 148.px
             rvCategoryItems.layoutParams = params
 
             rvCategoryItems.adapter = adapter
